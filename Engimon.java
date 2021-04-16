@@ -356,6 +356,19 @@ public class Engimon {
         return -1;
     }
 
+    public int compareTo(Engimon other){
+        if (getElementIndex(this.getSpecies().getElement(0)) > getElementIndex(other.getSpecies().getElement(0)) ){
+            return 1;
+        }
+        if (getElementIndex(this.getSpecies().getElement(0)) < getElementIndex(other.getSpecies().getElement(0))){
+            return -1;
+        }
+        else{
+            if (this.getLevel() > other.getLevel()) return -1;
+            else return 1;
+        }
+    }
+
     @Override
     public String toString(){
         String daftarSkill = "";

@@ -114,4 +114,10 @@ public class Skill{
          this.name, elm, this.basePower, this.masteryLevel);
     }
 
+    public int compareTo(Skill other){
+        if (this.getBasePower() > other.getBasePower()){
+            return 1;
+        }else return -1;
+    }
+
 }

@@ -2,7 +2,7 @@ import java.util.Vector;
 
 
 //TO DO : GANTI JADI KELAS SKILL
-public class InventorySkill extends Inventory<Integer> {
+public class InventorySkill extends Inventory<Skill> {
     private Vector<Integer> jumlah;
 
     InventorySkill(){
@@ -10,22 +10,24 @@ public class InventorySkill extends Inventory<Integer> {
         this.jumlah = new Vector<>();
     }
 
-    public void addElement(Integer element) throws CustomException{
+    public void addElement(Skill element) throws CustomException{
         if (InventoryBase.banyakItem != InventoryBase.maksItem ){
             try {
                 this.getIndex(element);
                 this.jumlah.set(this.getIndex(element), this.jumlah.get(this.getIndex(element))+1);
             } catch (Exception e) {
-                //TODO: handle exception
                 this.storage.add(element);
                 this.jumlah.add(1);
+                this.jumlah.sort((Integer b, Integer a) -> this.storage.get(this.jumlah.indexOf(a)).compareTo(this.storage.get(this.jumlah.indexOf(b))));
+                this.storage.sort((Skill a, Skill b) -> b.compareTo(a));
+
             }
             InventoryBase.banyakItem++;
         }
         else throw (new CustomException("Inventory penuh"));
     }
 
-    public Integer getIndex(Integer element) throws CustomException{
+    public Integer getIndex(Skill element) throws CustomException{
         for (int i =0; i < this.storage.size(); i++) {
             if (this.storage.get(i).equals(element)){
                 return i;
@@ -43,8 +45,8 @@ public class InventorySkill extends Inventory<Integer> {
     //     return 0;
     // }
 
-    public Integer removeElement(int index) throws CustomException{
-        Integer dummy;
+    public Skill removeElement(int index) throws CustomException{
+        Skill dummy;
         try{
             dummy = this.storage.get(index);
             this.storage.remove(index);

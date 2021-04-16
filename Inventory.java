@@ -14,6 +14,7 @@ public class Inventory<T>{
             this.storage.add(element);
             InventoryBase.banyakItem++;
         }
+        
         else throw (new CustomException("Inventory penuh"));
     }
 
