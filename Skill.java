@@ -116,8 +116,8 @@ public class Skill{
 
     public int compareTo(Skill other){
         if (this.getBasePower() > other.getBasePower()){
-            return 1;
-        }else return -1;
+            return -1;
+        }else return 1;
     }
 
 }

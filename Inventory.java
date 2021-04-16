@@ -18,6 +18,24 @@ public class Inventory<T>{
         else throw (new CustomException("Inventory penuh"));
     }
 
+    public T getElement(int idx) throws CustomException{
+        T dummy;
+        try {
+            dummy = this.storage.get(idx);
+        } catch (Exception e) {
+            throw new CustomException("Invalid index");
+        }
+        return dummy;
+    }
+
+
+    public void setElement(T element, int idx) throws CustomException{
+        try {
+            this.storage.set(idx, element);
+        } catch (Exception e) {
+            throw new CustomException("Invalid index");
+        }
+    }
     public T removeElement(int index) throws CustomException{
         T dummy;
         try{
