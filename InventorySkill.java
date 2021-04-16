@@ -59,7 +59,7 @@ public class InventorySkill extends Inventory<Skill> {
 
     public void showStorage(){
         for (int i = 0; i < this.storage.size(); i++){
-            System.out.println(this.storage.get(i).toString() + " jumlahnya " + this.jumlah.get(i).toString());
+            System.out.println(String.format("%-40s %s", this.storage.get(i).toString(), "\t\tjumlahnya " + this.jumlah.get(i).toString()));
         }
     }
 }

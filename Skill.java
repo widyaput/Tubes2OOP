@@ -110,7 +110,7 @@ public class Skill{
             elm+=element.toString();
             elm+=" ";
         }
-        return String.format("[ %s | %s | %d | %d\n",
+        return String.format("[ %s | %s | %d | %d]",
          this.name, elm, this.basePower, this.masteryLevel);
     }
 
