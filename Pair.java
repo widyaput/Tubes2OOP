@@ -19,7 +19,7 @@ public class Pair<T1,T2> {
         this.first = first;
     }
 
-    public void setSeconnd(T2 second){
+    public void setSecond(T2 second){
         this.second = second;
     }
 

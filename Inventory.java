@@ -49,8 +49,8 @@ public class Inventory<T>{
     }
 
     public void showStorage(){
-        for (T t : storage) {
-            System.out.println(t.toString());
+        for (int i = 0; i < this.storage.size(); i++){
+            System.out.println(String.format("%d. %s", i+1, storage.get(i)));
         }
     }
 
