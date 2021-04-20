@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Player {
     private Engimon activeEngimon;
     private boolean isThereActiveEngimon;
@@ -346,5 +349,288 @@ public class Player {
 
     public void spawn(){
         this.map.SpawnEngimon();
+    }
+
+    public boolean battle(Engimon enemy) {
+        Scanner sc = new Scanner(System.in);  
+        int ongoing = 1;
+        int attempt = 1;
+        boolean hasil = true;
+        while(ongoing == 1) {
+            int answer;
+            //tampilkan stats lengkap musuh
+            // cout << "------------------------" << endl;
+            // cout << enemy;
+            // cout << "Level : " << enemy.getLevel() << endl;
+            // cout << "Element : " << endl;
+            // vector<Element> element = enemy.getElement();
+            // for (auto i = element.begin(); i != element.end(); ++i) {
+            //     cout << " - " << *i << endl;
+            // }
+            // cout << "------------------------" << endl; 
+            System.out.println(enemy.toString());
+            
+            double adv1 = Engimon.advantage(activeEngimon,enemy,1);
+            double adv2 = Engimon.advantage(activeEngimon,enemy,2);
+            double power1 = Engimon.countPower(activeEngimon,adv1);
+            double power2 = Engimon.countPower(enemy,adv2);
+            System.out.println("Your Engimon has a total power of " + power1);
+            System.out.println("Enemy Engimon has a total power of " + power2);
+
+            System.out.println("Input the number of the command you want to do");
+            System.out.println("1. attack");
+            System.out.println("2. change active engimon");
+            System.out.println("3. run");
+            System.out.println("Choose a command : ");
+            answer = sc.nextInt();
+            if(answer == 1) {
+                //this->drawing(18+4);
+                //ongoing = attack(P,P.getActiveEngimon(),enemy,attempt); // error soalnya harusnya pake reference
+                if(power1 >= power2) { // kalo player menang
+                   // this->drawing(20+4);
+                    System.out.println("Your Engimon wins");
+                    activeEngimon.addEXP(enemy.getLevel()*5); // tambah exp
+                    System.out.println("Your active engimon gained " + enemy.getLevel()*5 + " experience points");
+                    if(activeEngimon.getStatus() == false) {
+                        activeEngimon = new Engimon(new SingleElemental(),0,0,0);
+                        isThereActiveEngimon = false;
+                        try {
+                            map.SetElementPeta(coorEA.getFirst(),coorEA.getSecond(), map.GetElementPetaTetap(coorEA.getFirst(),coorEA.getSecond()));
+                        }
+                        catch(Exception e) {
+                            e.printStackTrace();
+                        }
+    
+                        System.out.println("Your active Engimon has reached its limit. He will ascend to Engimon heaven");
+                    }
+                    enemy.setWild(false);
+                    enemy.setLives(3);
+                    try {
+                        addEngimon(enemy); // nambah engimon ke inventory
+                    }
+                    catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    //dapet skill musuh pertama
+
+                    ArrayList<Skill> s = enemy.getSkills();
+                    try {
+                        addSkillItem(s.get(0));
+                        System.out.println("You obtained skill item : " + s.get(0).getName());
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ongoing = 0;
+                    hasil = true;
+                }
+                else {
+                    //this->drawing(19+4);
+                    if(activeEngimon.getLives() > 1) {
+                        System.out.println("Your Engimon's lives decreased");
+                        activeEngimon.setLives(activeEngimon.getLives() - 1);
+                        ongoing = 1;
+                    }
+                    else {
+                        activeEngimon = new Engimon(new SingleElemental(),0,0,0); // Engimon player ditimpa default Engimon
+                        isThereActiveEngimon = false;
+                        ongoing = 0;
+                        try {
+                            map.SetElementPeta(coorEA.getFirst(),coorEA.getSecond(), map.GetElementPetaTetap(coorEA.getFirst(),coorEA.getSecond()));
+                        }
+                        catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                        hasil = false;
+                    }
+                    
+    
+                    // if(getListEng().getSize() >= 1) { // kalo masih ada Engimon di inventory
+                    //     int found = 0;
+                    //     while(found == 0) {
+                    //         int x,y;
+                    //         System.out.println("Please choose another Engimon to be active");
+                    //         viewListEngimon(); 
+                    //         System.out.println("Input the index of the Engimon : ");
+                    //         x = sc.nextInt();
+                    //         y = x - 1;
+                    //         try {
+                    //             activateEngimon(y); // error kalo input index di luar batas
+                    //             found = 1;
+                    //         }
+                    //         catch (exception e)
+                    //         {
+                    //             System.out.println("Wrong input. Please try again.");
+    
+                    //             //ini apa gak suruh minta inputan lagi aja sampai dapet engimon yang pas?
+                    //             //maksudnya biar dia cuma keluar dari battle kalau kalah atau run
+    
+                    //             //ABAIKAN KOMEN INI, BACA YANG BAWAH YANG TANYA GAK BATTLE LAGI KALAU PLAYER KALAH
+                    //         }
+                    //         if (found) {
+                    //             System.out.println("You have successfully changed your active Engimon");
+                    //         }
+        
+                    //     }
+                    //}
+                    //changeEngimon(p,attempt); // kalo Engimon mati wajib ganti
+                    //ongoing = 0;
+                    //oh ini harusnya kalau sampai sini gak battle lagi ya?
+                    //kalau iya hasilnya false;
+                    //hasil = false;
+                    
+                    //kalau dia kalah dia wajib activate engimon waktu mash mode battle? kalau di luar mode battle gimna?
+                }
+                        
+            }
+            else if(answer == 2) {
+                if(getListEng().getSize() >= 1) { // kalo masih ada Engimon di inventory
+                    int found = 0;
+                    while(found == 0) {
+                        int x,y;
+                        System.out.println("Please choose another Engimon to activate");
+                        //belom ada viewListEngimon
+                        viewListEng(); 
+                        System.out.println("Input the index of the Engimon : ");
+                        x = sc.nextInt();
+                        y = x - 1;
+                        if(x <= getListEng().getSize()) {
+                            try {
+                                activateEngimon(y); // error kalo input index di luar batas
+                                System.out.println("You have successfully changed your active Engimon");
+                                found = 1;
+                            }
+                            catch(Exception e) {
+                                e.printStackTrace();
+                                
+                            }
+                        }
+                        else {
+                            System.out.println("Invalid index");
+                            System.out.println("");
+                        }
+                        
+                    }
+                }
+                else {
+                    if(isThereActiveEngimon == false) { // otomatis kalah kalo Active Engimon mati dan nggak ada lagi di inventory
+                        System.out.println("All of your Engimon are defeated.");
+                        System.out.println("GAME OVER");
+                        hasil = false;
+                        //flow program gak bakal bisa sampai kesini, karena init battle mewajibkan active engimon ada sebelumnya
+                    }
+                    else {
+                        System.out.println("You don't have any other available Engimon");
+                    }
+                }
+    
+            }
+            else if(answer == 3) {
+                System.out.println("You successfully fled");
+                ongoing = 0;
+                //ongoing = run(attempt);
+                //int x = rand() % 2 + 1;
+                // if(attempt > 0) {
+                //     attempt = attempt - 1;
+                //     if(x == 1) {
+                //         cout << "You failed to run" << endl;
+                //         cout << "" << endl;
+                //         ongoing = 1;
+                //     }
+                //     else {
+                //         cout << "You successfully fled" << endl;
+                //         ongoing = 0;
+                //         hasil = false;
+                //     }
+                // }
+                // else {
+                //     cout << "You may only attempt to run once." << endl;
+                //     cout << "" << endl;
+                //     ongoing = 1; //ini attempt runnya gak tiap engimon aja? kalau 1 tiap player bisa langsung kalah kalau enemynya OP
+                // }
+            }
+    
+        }
+        sc.close();
+        return hasil;
+    }
+    
+    //peta belom beres
+    public void initBattle() throws CustomException {
+        if (isThereActiveEngimon && isEnemyAround()){
+            Pair<Integer,Integer> coorEnemy = getEnemyAround();
+            Engimon enemy = map.GetEngimonfromDaftar(coorEnemy.getFirst(),coorEnemy.getSecond());
+            //this->drawing(21+4);
+            //this->drawing(22+4);
+            boolean win = battle(enemy);
+            if (win) {
+                map.DeleteEngimon2(coorEnemy.getFirst(),coorEnemy.getSecond());
+            }
+        }else{
+            if (! isThereActiveEngimon){
+                throw(new CustomException("You don't any active Engimon"));
+            }
+            else {
+                throw(new CustomException("There are no enemy eround"));
+            }
+        }
+    }
+    //peta belom beres
+    boolean isEnemyAround(){
+        int y = coorP.getFirst();
+        int x = coorP.getSecond();
+        try {
+            if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o' && map.GetElementPeta(y-1,x) != 'X')){
+                return true;
+            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o' && map.GetElementPeta(y,x+1) != 'X')){
+                return true;
+            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y+1,x) != 'X')){
+                return true;
+            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y,x-1) != 'X')){
+                return true;
+            }
+            return false;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+        
+    
+        
+    }
+    
+    //peta belom beres
+    Pair<Integer,Integer> getEnemyAround(){
+        int y = coorP.getFirst();
+        int x = coorP.getSecond();
+        int a;
+        int b;
+        try {
+            if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o' && map.GetElementPeta(y-1,x) != 'X')){
+                a= y-1;
+                b=x;
+            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o' && map.GetElementPeta(y,x+1) != 'X')){
+                a = y;
+                b=x+1;
+            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y+1,x) != 'X')){
+                a=y+1;
+                b=x;
+            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y,x-1) != 'X')){
+                a = y;
+                b = x-1;
+            }else {a = -1; b=-1;}
+        
+            return Pair.makePair(a,b);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return Pair.makePair(-1,-1);
+        
+    }
+    
+    public boolean isGameOver(){
+        return (!(isThereActiveEngimon) && (getListEng().getSize()==0));
     }
 }

@@ -54,6 +54,10 @@ public class Inventory<T>{
         }
     }
 
+    public int getSize() {
+        return storage.size();
+    }
+
 }
 
 

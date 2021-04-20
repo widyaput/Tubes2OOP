@@ -125,6 +125,9 @@ public class Engimon {
     public int getLevel(){
         return this.level;
     }
+    public int getLives(){
+        return this.lives;
+    }
 
     /**
      * Getter exp engimon
@@ -289,8 +292,8 @@ public class Engimon {
         return false;
     }
 
-    public static float countPower(Engimon e, float adv){
-        float total = e.getLevel() * adv;
+    public static double countPower(Engimon e, double adv){
+        double total = e.getLevel() * adv;
         ArrayList<Skill> skills = e.getSkills();
 
         for (Skill skill : skills) {
