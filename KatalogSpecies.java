@@ -62,6 +62,22 @@ public class KatalogSpecies implements Iterable{
     }
 
     /**
+     * Method mengembalikan indeks dari suatu species
+     * @param namaSpecies nama species yang ingin dicari indeksnya
+     * @return indeks suatu species pada KatalogSpecies
+     */
+    public int getIndexOfSpecies(String namaSpecies){
+        int i = 0;
+        for (Species species2 : species) {
+            if (species2.getName().equals(namaSpecies)){
+                return i;
+            }
+            i++;
+        }
+        return 0;
+    }
+
+    /**
      * Method mengembalikan seluruh species yang tersedia
      * @return seluruh species
      */

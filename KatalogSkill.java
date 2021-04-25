@@ -21,7 +21,7 @@ public class KatalogSkill implements Iterable{
         ArrayList<Element> electric_ice_water = new ArrayList<Element> (Arrays.asList(Element.ELECTRIC, Element.ICE, Element.WATER));
         ArrayList<Element> allElement = new ArrayList<Element> (Arrays.asList(Element.FIRE, Element.ELECTRIC, Element.WATER, Element.GROUND, Element.ICE));;
     
-        Skill s0 = new Skill("One Punch", 9999, 1, allElement);
+        Skill s0 = new Skill("Regular Punch", 500, 1, allElement);
         Skill s1 = new Skill("Inferno", 900, 1, fire);
         Skill s2 = new Skill("Ragnarok Trisagon", 950, 1, fire);
         Skill s3 = new Skill("Maralagidyne", 970, 1, fire);
@@ -80,7 +80,21 @@ public class KatalogSkill implements Iterable{
     public Skill getSkillFromIndex(int idx){
         return this.skill_collection.get(idx);
     }
-
+        /**
+     * Method mengembalikan indeks dari suatu skill
+     * @param namaSkill nama skill yang ingin dicari indeksnya
+     * @return indeks suatu skill pada KatalogSkill
+     */
+    public int getIndexOfSkill(String namaSkill){
+        int i = 0;
+        for (Skill skill : skill_collection) {
+            if (skill.getName().equals(namaSkill)){
+                return i;
+            }
+            i++;
+        }
+        return 0;
+    }
     @Override
     public Iterator iterator() {
         return this.skill_collection.iterator();
