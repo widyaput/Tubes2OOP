@@ -73,6 +73,9 @@ public class Main {
                     scanner.nextLine();
                     player1.learn(number-1);
                 }
+                if(command.equals("battle")) {
+                    player1.initBattle();
+                }
 
                 if (player1.getStatusEA() && isLastCommandMove){
                     try {
