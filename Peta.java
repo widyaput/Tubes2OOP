@@ -37,6 +37,18 @@ public class Peta{
     public int GetKolom(){
         return this.kolom;
     }
+    public int getNElmt(){
+        return this.nElmt;
+    }
+    public Vector<Character> getIsiPeta(){
+        return this.isiPeta;
+    }
+    public Vector<Character> getPetaTetap(){
+        return this.PetaTetap;
+    }
+    public Vector<PosisiEngimon> getDaftarEngimons(){
+        return this.DaftarEngimon;
+    }
     public int GetBarisObjek(int posisi){
         return (posisi / this.kolom);
     }
@@ -129,6 +141,17 @@ public class Peta{
         } 
         return true;
     }
+
+    public void LoadPeta(Vector<Character> PetaBerisi, Vector<Character> PetaTetapp){
+        this.PetaTetap.clear();
+        this.isiPeta.clear();
+        for(int i = 0; i < this.nElmt; i++){
+            char isi1 = PetaBerisi.get(i);
+            char isi2 = PetaTetapp.get(i);
+            this.isiPeta.add(i, isi1);
+            this.PetaTetap.add(i, isi2);
+        }
+    }
     
     // print element atribut isi peta
     public void PrintPeta(){
@@ -195,6 +218,16 @@ public class Peta{
         } catch(Exception exc){
             //
             System.out.println(exc.getMessage()); 
+        }
+    }
+
+    //kalo engimonnya sudah berhasil dijinakkan hapus dari DaftarEngimon dan ubah element peta
+    public void DeleteEngimon(PosisiEngimon e){
+        try{
+            SetElementPeta(e.getBarisPosisi(), e.getKolomPosisi(), GetElementPetaTetap(e.getBarisPosisi(), e.getKolomPosisi()));
+            this.DaftarEngimon.remove(e);
+        } catch(Exception exc){
+            // System.out.println(exc.getMessage()); 
         }
     }
 
@@ -497,31 +530,22 @@ public class Peta{
         }
     }
 
-    // untuk mengecek apakah masih ada engimon liar pada daftar engimon liar
-    // yang memiliki status false
-    public boolean Notclear(){
-        for(int i = 0; i < this.DaftarEngimon.size(); i++){
-            if(this.DaftarEngimon.get(i).getEngimon().getStatus() == false){
-                return true;
-            }
-        }
-        return false;
-    }
-
     //delete engimon liar yang mati
     // hapus dari daftar engimon liar dan hapus dari peta
     public void deleteDeadEngimon(){
         //System.out.println(this.DaftarEngimon.size());
-        while(Notclear()){
-            for(int i = 0; i < this.DaftarEngimon.size(); i++){
-                // hapus engimon yang udah mati dari peta dan daftar engimon
-                if(this.DaftarEngimon.get(i).getEngimon().getStatus() == false){
-                    int baris = this.DaftarEngimon.get(i).getBarisPosisi();
-                    int kolom = this.DaftarEngimon.get(i).getKolomPosisi();
-                    DeleteEngimon(baris, kolom);
-                }
+        ArrayList<PosisiEngimon> dead = new ArrayList<PosisiEngimon>();
+        for(int i = 0; i < this.DaftarEngimon.size(); i++){
+            if(this.DaftarEngimon.get(i).getEngimon().getStatus() == false){
+                dead.add(this.DaftarEngimon.get(i));
             }
-        } 
+            
+        }
+        // hapus engimon yang udah mati dari peta dan daftar engimon
+        for(PosisiEngimon e : dead){
+            DeleteEngimon(e);
+        }
+ 
     }
 
     // prosedur untuk menambahankan Exp dari engimon liar
