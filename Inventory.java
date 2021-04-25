@@ -58,6 +58,10 @@ public class Inventory<T>{
         return storage.size();
     }
 
+    public Vector<T> getStorage(){
+        return this.storage;
+    }
+
 }
 
 

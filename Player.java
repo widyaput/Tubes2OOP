@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Vector;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Player {
     private Engimon activeEngimon;
@@ -20,6 +27,9 @@ public class Player {
         this.isThereActiveEngimon = false;
         this.coorEA = Pair.makePair(-1,-1);
         this.activeEngimon = null;
+    }
+
+    public void starterPack(){
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         KatalogSkill katalogSkill = new KatalogSkill();
         Engimon E1 = new Engimon(katalogSpecies.getSpeciesFromIndex(8), "Alam", "", "", "", "", 1, 0, 0);
@@ -36,8 +46,6 @@ public class Player {
         } catch (Exception e) {
             //Do nothing
         }
-        
-
     }
 
     public void addEngimon(Engimon element) throws Exception{
@@ -121,6 +129,13 @@ public class Player {
         }
     }
 
+    public void setCoorP(Pair<Integer,Integer> coor){
+        this.coorP = coor;
+    }
+
+    public void setCoorEA(Pair<Integer,Integer> coor){
+        this.coorEA = coor;
+    }
 
     public Integer getXCoor(){
         return this.coorP.getSecond();
@@ -348,7 +363,8 @@ public class Player {
     }
 
     public void spawn(){
-        this.map.SpawnEngimon();
+        int highestLevel = this.listEngimon.getStorage().stream().map(a -> a.getLevel()).reduce((a,b) -> a > b ? a : b).get();
+        this.map.SpawnEngimon(highestLevel);
     }
 
     public boolean battle(Engimon enemy) {
@@ -564,7 +580,7 @@ public class Player {
             //this->drawing(22+4);
             boolean win = battle(enemy);
             if (win) {
-                map.DeleteEngimon2(coorEnemy.getFirst(),coorEnemy.getSecond());
+                map.DeleteEngimon(coorEnemy.getFirst(),coorEnemy.getSecond());
             }
         }else{
             if (! isThereActiveEngimon){
@@ -632,5 +648,259 @@ public class Player {
     
     public boolean isGameOver(){
         return (!(isThereActiveEngimon) && (getListEng().getSize()==0));
+    }
+
+    public void save() throws IOException{
+        FileWriter write = new FileWriter("load.txt", false);
+        PrintWriter print = new PrintWriter(write);
+        print.printf("%d %d\n", this.map.GetBaris(), this.map.GetKolom());
+        try {
+            for (int i = 0; i < this.map.GetBaris(); i++){
+                for (int j = 0; j < this.map.GetKolom(); j++){
+                    print.printf("%c", this.map.GetElementPetaTetap(i,j));
+                    if (j == this.map.GetKolom()-1){
+                        print.printf("\n");
+                    }
+                }
+            }
+            for (int i = 0; i < this.map.GetBaris(); i++){
+                for (int j = 0; j < this.map.GetKolom(); j++){
+                    print.printf("%c", this.map.GetElementPeta(i,j));
+                    if (j == this.map.GetKolom()-1){
+                        print.printf("\n");
+                    }
+                }
+            }
+            Vector<PosisiEngimon> dummy = this.map.getDaftarEngimons();
+            print.printf("%d\n", dummy.size());
+            // KatalogSpecies speciesfac = new KatalogSpecies();
+            // KatalogSkill skillfac = new KatalogSkill();
+            for (int i = 0; i < dummy.size(); i++){
+                PosisiEngimon dam = dummy.get(i);
+                //baris, kolom, spesies, level, exp, cumulativeexp
+                print.printf("%d %d %s %d %d %d\n", dam.getBarisPosisi(), dam.getKolomPosisi(), dam.getEngimon().getSpeciesName(), dam.getEngimon().getLevel(), dam.getEngimon().getEXP(), dam.getEngimon().getCumulativeEXP());
+                // ArrayList<Skill> dum = dam.getEngimon().getSkills();
+                // print.printf("%d\n", dum.size());
+                // for (int j = 0 ; j < dum.size(); j++){
+                //     //nama skill, mastery level
+                //     print.printf("%s %d\n", dum.get(j).getName(), dum.get(j).getMasteryLevel());
+                // }
+            }
+            //sampai sini udah save map
+            //giliran save playernya
+            // save coorP, status active engimon (bool, jika iya berarti akan ada coor EA dan atribut EA)
+            // save list engimon lengkap
+            // save list skill item lengkap
+            print.printf("%d %d\n", this.coorP.getFirst(), this.coorP.getSecond());
+            print.printf("%d\n", (this.isThereActiveEngimon ? 1 : 0));
+            if (this.isThereActiveEngimon){
+                print.printf("%d %d\n", this.coorEA.getFirst(), this.coorEA.getSecond());
+                //species, nama, nama ortu1, spesies ortu 1, nama ortu 2, spesies ortu2, level, exp, cumulativeexp
+                print.printf("%s %s %s %s %s %s %d %d %d\n", activeEngimon.getSpeciesName(), activeEngimon.getName().equals("") ? "null" : activeEngimon.getName(), activeEngimon.getParentName().equals("") ? "null" : activeEngimon.getParentName(), activeEngimon.getParentSpecies().equals("") ? "null" : activeEngimon.getParentSpecies(), activeEngimon.getParent2Name().equals("") ? "null" : activeEngimon.getParent2Species(), activeEngimon.getParent2Species().equals("") ? "null" : activeEngimon.getParent2Species(), activeEngimon.getLevel(), activeEngimon.getEXP(), activeEngimon.getCumulativeEXP());
+                ArrayList<Skill> dum = activeEngimon.getSkills();
+                print.printf("%d\n", dum.size());
+                for (int j = 0 ; j < dum.size(); j++){
+                    //nama skill, mastery level
+                    print.printf("%s %d\n", dum.get(j).getName(), dum.get(j).getMasteryLevel());
+                }
+            }
+            Vector<Engimon> dumeng = this.listEngimon.getStorage();
+            print.printf("%d\n", dumeng.size());
+            for (int i = 0 ; i < dumeng.size(); i++){
+                //species, nama, nama ortu1, spesies ortu 1, nama ortu 2, spesies ortu2, level, exp, cumulativeexp
+                print.printf("%s %s %s %s %s %s %d %d %d\n", dumeng.get(i).getSpeciesName(), dumeng.get(i).getName().equals("") ? "null" : dumeng.get(i).getName(), dumeng.get(i).getParentName().equals("") ? "null" : dumeng.get(i).getParentName(), dumeng.get(i).getParentSpecies().equals("") ? "null" : dumeng.get(i).getParent2Species(), dumeng.get(i).getParent2Name().equals("") ? "null" : dumeng.get(i).getParent2Name(), dumeng.get(i).getParent2Species().equals("") ? "null" : dumeng.get(i).getParent2Species(), dumeng.get(i).getLevel(), dumeng.get(i).getEXP(), dumeng.get(i).getCumulativeEXP());
+                ArrayList<Skill> dum = dumeng.get(i).getSkills();
+                print.printf("%d\n", dum.size());
+                for (int j = 0 ; j < dum.size(); j++){
+                    //nama skill, mastery level
+                    print.printf("%s %d\n", dum.get(j).getName(), dum.get(j).getMasteryLevel());
+                }
+            }
+
+            Vector<Skill> dumskill = this.listSkill.getStorage();
+            print.printf("%d\n", dumskill.size());
+            for (int i = 0; i < dumskill.size(); i++){
+                print.printf("%s %d", dumskill.get(i).getName(), dumskill.get(i).getMasteryLevel());
+                if (i != dumskill.size()-1) print.printf("\n");
+            }
+        } catch (Exception e) {
+            System.out.println("Error"); //developing testing
+            //TODO: handle exception
+        }finally{
+            print.close();
+        }
+
+        
+    }
+
+    public static Player load(){
+        try {
+            Scanner reader = new Scanner(new File("load.txt"));
+            String dummy = reader.nextLine();
+            int baris, kolom;
+            Pattern digit = Pattern.compile("\\d+");
+            Matcher m;
+            Pattern str = Pattern.compile("[a-z]+", Pattern.CASE_INSENSITIVE);
+            m = digit.matcher(dummy);
+            m.find();
+            baris = Integer.parseInt(dummy.substring(m.start(),m.end()));
+            m.find();
+            kolom = Integer.parseInt(dummy.substring(m.start(), m.end()));
+            
+            Peta map = new Peta(baris,kolom);
+            Vector<Character> petaisi = new Vector<Character>();
+            Vector<Character> petatetap = new Vector<Character>();
+            for(int i = 0; i < baris; i++){
+                dummy = reader.nextLine();
+                for (int j = 0; j < kolom;j++){
+                    petatetap.add(dummy.charAt(j));
+                }
+            }
+            for(int i = 0; i < baris; i++){
+                dummy = reader.nextLine();
+                for (int j = 0; j < kolom;j++){
+                    petaisi.add(dummy.charAt(j));
+                }
+            }
+            map.LoadPeta(petaisi, petatetap);
+            KatalogSkill skillfac = new KatalogSkill();
+            KatalogSpecies specfac = new KatalogSpecies();
+            int wild;
+            wild = Integer.parseInt(reader.nextLine());
+            for (int i = 0 ; i < wild; i++){
+                dummy = reader.nextLine();
+                m = digit.matcher(dummy);
+                Matcher n = str.matcher(dummy);
+                n.find();
+                String spcname = dummy.substring(n.start(), n.end());
+                Species spcdum = specfac.getSpeciesFromIndex(specfac.getIndexOfSpecies(spcname));
+                int posisi1, posisi2,level, exp, cexp;
+                m.find();
+                posisi1 =Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                posisi2 = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                level = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                exp = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                cexp = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                Engimon wilde = new Engimon(spcdum,level,exp,cexp);
+                PosisiEngimon p = new PosisiEngimon(posisi1,posisi2,wilde);
+                map.AddEngimon(p, map.GetElementPeta(posisi1, posisi2));
+            }
+            Player p1 = new Player(map);
+            int coor1, coor2;
+            dummy = reader.nextLine();
+            m = digit.matcher(dummy);
+            m.find();
+            coor1 = Integer.parseInt(dummy.substring(m.start(), m.end()));
+            m.find();
+            coor2 = Integer.parseInt(dummy.substring(m.start(), m.end()));
+            p1.setCoorP(Pair.makePair(coor1, coor2));
+            boolean isEA = reader.nextLine().equals("0") ? false : true;
+            if (isEA){
+                dummy = reader.nextLine();
+                m = digit.matcher(dummy);
+                m.find();
+                coor1 = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                coor2 = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                dummy = reader.nextLine();
+                m = digit.matcher(dummy);
+                Matcher n = str.matcher(dummy);
+                n.find();
+                String spcname = dummy.substring(n.start(), n.end());
+                n.find();
+                String name = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaortu1 = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaspecies1 = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaortu2 = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaspecies2 = dummy.substring(n.start(), n.end());
+                m.find();
+                int lvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                int exp = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                int ce = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                ArrayList<Skill> dumSkills = new ArrayList<Skill>();
+                int size = Integer.parseInt(reader.nextLine());
+                for (int i = 0; i < size; i++){
+                    dummy = reader.nextLine();
+                    m = digit.matcher(dummy);
+                    m.find();
+                    int idx = m.start();
+                    int mlvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                    Skill s = skillfac.getSkillFromIndex(skillfac.getIndexOfSkill(dummy.substring(0, idx-1)));
+                    s.setMasteryLevel(mlvl);
+                    dumSkills.add(s);
+                }
+                Engimon ea = new Engimon(specfac.getSpeciesFromIndex(specfac.getIndexOfSpecies(spcname)), name.equals("null") ? "" : name, namaortu1.equals("null") ? "" : namaortu1, namaspecies1.equals("null") ? "" : namaspecies1, namaortu2.equals("null") ? "" : namaortu2, namaspecies2.equals("null") ? "" : namaspecies2, dumSkills, lvl,exp,ce);
+                p1.activeEngimon = ea;
+                p1.isThereActiveEngimon = true;
+                p1.setCoorEA(Pair.makePair(coor1, coor2));
+                p1.map.SetElementPeta(coor1, coor2, 'X');
+            }
+            int eng = Integer.parseInt(reader.nextLine());
+            for (int j = 0; j < eng; j++){
+                dummy = reader.nextLine();
+                m = digit.matcher(dummy);
+                Matcher n = str.matcher(dummy);
+                n.find();
+                String spcname = dummy.substring(n.start(), n.end());
+                n.find();
+                String name = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaortu1 = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaspecies1 = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaortu2 = dummy.substring(n.start(), n.end());
+                n.find();
+                String namaspecies2 = dummy.substring(n.start(), n.end());
+                m.find();
+                int lvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                int exp = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                m.find();
+                int ce = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                ArrayList<Skill> dumSkills = new ArrayList<Skill>();
+                int size = Integer.parseInt(reader.nextLine());
+                for (int i = 0; i < size; i++){
+                    dummy = reader.nextLine();
+                    m = digit.matcher(dummy);
+                    m.find();
+                    int idx = m.start();
+                    int mlvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                    Skill s = skillfac.getSkillFromIndex(skillfac.getIndexOfSkill(dummy.substring(0, idx-1)));
+                    s.setMasteryLevel(mlvl);
+                    dumSkills.add(s);
+                }
+                Engimon e = new Engimon(specfac.getSpeciesFromIndex(specfac.getIndexOfSpecies(spcname)), name.equals("null") ? "" : name, namaortu1.equals("null") ? "" : namaortu1, namaspecies1.equals("null") ? "" : namaspecies1, namaortu2.equals("null") ? "" : namaortu2, namaspecies2.equals("null") ? "" : namaspecies2, dumSkills, lvl,exp,ce);
+                p1.addEngimon(e); 
+            }
+
+            int skill = Integer.parseInt(reader.nextLine());
+            for (int i = 0; i < skill; i++){
+                dummy = reader.nextLine();
+                m = digit.matcher(dummy);
+                m.find();
+                int idx = m.start();
+                int mlvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
+                Skill s = skillfac.getSkillFromIndex(skillfac.getIndexOfSkill(dummy.substring(0, idx-1)));
+                s.setMasteryLevel(mlvl);
+                p1.addSkillItem(s);
+            }
+
+            return p1;
+        } catch (Exception e) {
+            System.out.println("Failed to load");
+            return null;
+            //TODO: handle exception
+        }
     }
 }

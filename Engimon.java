@@ -145,6 +145,22 @@ public class Engimon {
         return this.species;
     }
 
+    public String getParentName(){
+        return this.p1Name;
+    }
+
+    public String getParent2Name(){
+        return this.p2Name;
+    }
+
+    public String getParentSpecies(){
+        return this.p1Species;
+    }
+
+    public String getParent2Species(){
+        return this.p2Species;
+    }
+
     /**
      * Method mengembalikan advantage element Engimon dengan element other
      * @return element advantage

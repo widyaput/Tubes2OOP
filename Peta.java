@@ -365,13 +365,13 @@ public class Peta{
 
     // untuk spawn engimon liar
     // fungsi untuk mendapat level dari active engimon belum
-    public void SpawnEngimon(){
+    public void SpawnEngimon(int activeLevel){
         int posisi, level;
         int BanyakSpawn = max_spawn - this.DaftarEngimon.size();
         String draft = "fFgGeEwiWIlLsSnN";
         char engimonTerpilih;
         Random rand = new Random();
-        int activeLevel = 3; //level dari active engimon
+        // int activeLevel = 3; //level dari active engimon
         for(int i = 0; i < BanyakSpawn; i++){
             engimonTerpilih = draft.charAt(rand.nextInt(16));
             posisi = RandomPosisi(engimonTerpilih, CekElementEngimonRandom(engimonTerpilih));
@@ -574,7 +574,7 @@ public class Peta{
         //     System.out.println(exc.getMessage());
         // }
         
-        p.SpawnEngimon();
+        p.SpawnEngimon(3);
         p.PrintPeta();
         //p.PrintDaftarEngimon();
 

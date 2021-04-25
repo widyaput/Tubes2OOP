@@ -1,16 +1,35 @@
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 public class Main {
     public static void main(String args[]){
-        Peta map = new Peta();
-        map.BacaFile("map.txt");
-        Player player1 = new Player(map);
-        player1.spawn();
         Scanner scanner = new Scanner(System.in);
+        System.out.println("New or load?");
         String command = scanner.nextLine();
+        Player player1;
+        if (command.equals("new")){
+            Peta map = new Peta();
+            map.BacaFile("map.txt");
+            player1 = new Player(map);
+            player1.starterPack();
+            player1.spawn();
+        }else{
+            player1 = Player.load();
+            if (player1 == null){
+                System.out.println("Couldnt load game");
+                scanner.close();
+                System.exit(1);
+            }
+        }
+        
+        command = scanner.nextLine();
         boolean isLastCommandMove = false;
         while(!command.equals("exit")){
             try {
+                if (command.equals("save")){
+                    player1.save();
+                }
                 if (command.equals("d")){
                     player1.moveD();
                     isLastCommandMove = true;
@@ -75,4 +94,5 @@ public class Main {
         }
         scanner.close();
     }
+
 }
