@@ -129,6 +129,129 @@ public class Player {
         }
     }
 
+    public Engimon breeding(Engimon A, Engimon B) {
+        KatalogSpecies katalogSpecies = new KatalogSpecies();
+        Species spec = null;
+        System.out.println("Masukkan nama anak : ");
+        Scanner scanner = new Scanner(System.in);
+        String nama = scanner.nextLine();
+        scanner.close();
+        
+        if (A.getElement().get(0) == B.getElement().get(0)) {
+            spec = A.getSpecies();
+        } else {
+            if (A.getAdvElement(B.getElement().get(0)) > B.getAdvElement(A.getElement().get(0))) {
+                  spec = A.getSpecies();
+            } else if (A.getAdvElement(B.getElement().get(0)) == B.getAdvElement(A.getElement().get(0))) {
+                if ((A.getSpecies().hasElement(Element.FIRE) && B.getSpecies().hasElement(Element.ELECTRIC)) ||
+                    (B.getSpecies().hasElement(Element.FIRE) && A.getSpecies().hasElement(Element.ELECTRIC))) {
+                    spec = katalogSpecies.getSpeciesFromIndex(5);
+                } else if ((A.getSpecies().hasElement(Element.WATER) && B.getSpecies().hasElement(Element.ICE)) ||
+                           (B.getSpecies().hasElement(Element.WATER) && A.getSpecies().hasElement(Element.ICE))) {
+                    spec = katalogSpecies.getSpeciesFromIndex(6);
+                } else if ((A.getSpecies().hasElement(Element.WATER) && B.getSpecies().hasElement(Element.GROUND)) ||
+                           (B.getSpecies().hasElement(Element.WATER) && A.getSpecies().hasElement(Element.GROUND))) {
+                    spec = katalogSpecies.getSpeciesFromIndex(7);
+                }
+            } else {
+                spec = B.getSpecies();
+            }
+        }
+        
+        Engimon C = new Engimon(spec, nama, A.getSpecies().getName(), A.getName(), B.getSpecies().getName(), B.getName(), this.skillanak(A, B, spec), 1, 0, 100);
+        
+        return C;
+    }
+    
+    public ArrayList<Skill> skillanak(Engimon A, Engimon B, Species spec) {
+        int masteryA, masteryB;
+        ArrayList<Skill> skillsA = A.getSkills();
+        ArrayList<Skill> skillsB = B.getSkills();
+        int n = skillsA.size() + skillsB.size();
+        ArrayList<Skill> allSkill = new ArrayList<Skill>();
+        ArrayList<Skill> getSkill = new ArrayList<Skill>();
+        Skill temp;
+        
+        // Make a new array with all of the skills
+        for (Skill s : skillsA) {
+            allSkill.add(s);
+        }
+        for (Skill s : skillsB) {
+            allSkill.add(s);
+        }
+        
+        // Sort all skills according to mastery level
+        // New bubble algorithm
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                masteryA = allSkill.get(j).getMasteryLevel();
+                masteryB = allSkill.get(j+1).getMasteryLevel();
+                if (masteryA < masteryB) {
+                    temp = allSkill.get(j);
+                    allSkill.set(j, allSkill.get(j+1));
+                    allSkill.set(j+1, temp);
+                }
+            }
+        }
+        
+        /*
+        Old sorting algorithm
+        int max;
+        for (int i = 0; i < n - 1; i++) {
+            max = i;
+            for (int j = i + 1; j < n; j++) {
+                masteryA = allSkill[max].getMasteryLevel();
+                masteryB = allSkill[j].getMasteryLevel();
+                if (masteryA < masteryB)
+                    max = j;
+            }
+            temp = allSkill[i];
+            allSkill[i] = allSkill[max];
+            allSkill[max] = temp;
+        }
+        */
+        
+        // Skill unik untuk species dari anak
+        Skill unique = spec.getBaseSkill();
+        boolean inheritUniquePar = false;
+        
+        // Remove duplicate skills, and check if there is unique skill of child's species
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (allSkill.get(i) == unique) {
+                    inheritUniquePar = true;
+                }
+                if (allSkill.get(i) == allSkill.get(j)) {   
+                    int mastery = allSkill.get(i).getMasteryLevel() + 1;
+                    if (mastery > 3) {
+                        mastery = 3;
+                    }
+                    allSkill.get(i).setMasteryLevel(mastery);
+                    n = n - 1;
+                    for (int k = j; k < n; k++) {
+                        allSkill.set(k, allSkill.get(k + 1));
+                    }
+                }
+            }
+        }
+        
+        // If parents don't have the unique skill of child's species,
+        // inherit that skill
+        if (!inheritUniquePar) {
+            for (int i = n; i > 0; i--) {
+                allSkill.set(i, allSkill.get(i - 1));
+            }
+            allSkill.set(0, unique);
+            n = n + 1;
+        }
+
+        getSkill.clear();
+        for (int i = 0; i < 4 && i < n; i++) {
+            getSkill.add(allSkill.get(i));
+        }
+        return getSkill;
+    }
+
     public void setCoorP(Pair<Integer,Integer> coor){
         this.coorP = coor;
     }
