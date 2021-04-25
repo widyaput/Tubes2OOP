@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Peta{
-    private final int max_spawn = 2;
+    private final int max_spawn = 4;
     private final int def = 16;
     private int baris;
     private int kolom;
@@ -36,6 +36,18 @@ public class Peta{
     }
     public int GetKolom(){
         return this.kolom;
+    }
+    public int getNElmt(){
+        return this.nElmt;
+    }
+    public Vector<Character> getIsiPeta(){
+        return this.isiPeta;
+    }
+    public Vector<Character> getPetaTetap(){
+        return this.PetaTetap;
+    }
+    public Vector<PosisiEngimon> getDaftarEngimons(){
+        return this.DaftarEngimon;
     }
     public int GetBarisObjek(int posisi){
         return (posisi / this.kolom);
@@ -110,6 +122,7 @@ public class Peta{
         return null;
     }
 
+    // membaca file txt peta
     public boolean BacaFile(String filename){
         Scanner inFile = null;
         try {
@@ -128,7 +141,19 @@ public class Peta{
         } 
         return true;
     }
+
+    public void LoadPeta(Vector<Character> PetaBerisi, Vector<Character> PetaTetapp){
+        this.PetaTetap.clear();
+        this.isiPeta.clear();
+        for(int i = 0; i < this.nElmt; i++){
+            char isi1 = PetaBerisi.get(i);
+            char isi2 = PetaTetapp.get(i);
+            this.isiPeta.add(i, isi1);
+            this.PetaTetap.add(i, isi2);
+        }
+    }
     
+    // print element atribut isi peta
     public void PrintPeta(){
         try{
             for(int i = 0; i < this.baris; i++){
@@ -173,7 +198,7 @@ public class Peta{
 
     }
 
-    //isi pair itu posisi dari engimon dan data engimon dan ubah element peta
+    //menambahkan element ada daftar engimon dan ubah element peta
     public void AddEngimon(PosisiEngimon e, char c){ 
         try{
             this.DaftarEngimon.add(e);
@@ -185,16 +210,28 @@ public class Peta{
     }
 
     //kalo engimonnya sudah berhasil dijinakkan hapus dari DaftarEngimon dan ubah element peta
-    public void DeleteEngimon2(int b, int k){
+    public void DeleteEngimon(int b, int k){
         try{
             PosisiEngimon e = GetEngimonforDelete(b,k);
             SetElementPeta(e.getBarisPosisi(), e.getKolomPosisi(), GetElementPetaTetap(e.getBarisPosisi(), e.getKolomPosisi()));
             this.DaftarEngimon.remove(e);
         } catch(Exception exc){
             //
+            System.out.println(exc.getMessage()); 
         }
     }
 
+    //kalo engimonnya sudah berhasil dijinakkan hapus dari DaftarEngimon dan ubah element peta
+    public void DeleteEngimon(PosisiEngimon e){
+        try{
+            SetElementPeta(e.getBarisPosisi(), e.getKolomPosisi(), GetElementPetaTetap(e.getBarisPosisi(), e.getKolomPosisi()));
+            this.DaftarEngimon.remove(e);
+        } catch(Exception exc){
+            // System.out.println(exc.getMessage()); 
+        }
+    }
+
+    // membuat engimon liar yang akan di spawn
     public Engimon CreateEngimon(char e, int level){
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         Random rand = new Random();
@@ -255,6 +292,8 @@ public class Peta{
         return engimon;
     }
 
+    // memilih level dari engimon liar yang akan di spawn, 
+    // activeLevel adalah level tertinggi engimon pada inventory player saat sekarang
     public int selectlevel(int activeLevel){
         int level = 0;
         Random rand = new Random();
@@ -291,6 +330,7 @@ public class Peta{
         return 4;
     }
     
+    // merandom posisi engimon liar akan muncul
     public int RandomPosisi(char engimonTerpilih, int cek){
         int posisi;
         Random random_posisi = new Random();
@@ -323,6 +363,8 @@ public class Peta{
         return posisi;
     }
 
+    // untuk spawn engimon liar
+    // fungsi untuk mendapat level dari active engimon belum
     public void SpawnEngimon(){
         int posisi, level;
         int BanyakSpawn = max_spawn - this.DaftarEngimon.size();
@@ -346,6 +388,7 @@ public class Peta{
         }
     }
 
+    // print element yang terdapat pada daftar engimon
     public void PrintDaftarEngimon(){
         for(PosisiEngimon a : this.DaftarEngimon){
             System.out.println("Baris : " + a.getBarisPosisi());
@@ -354,6 +397,7 @@ public class Peta{
         }
     }
 
+    // mengubah posisi engimon liar pada peta, ketika dijalankan
     public void UbahPosisi(int barisE, int kolomE, int pilih, int index){
         try{
             char simbol = GetElementPeta(barisE, kolomE);
@@ -383,6 +427,7 @@ public class Peta{
         
     }
 
+    // mengecek apakah tempat berpindah engimon sudah sesuai dengan jenis nya
     public int CekValid(int b, int k, char charEngimon){
         try{
             int tmp = CekElementEngimonRandom(charEngimon);
@@ -451,6 +496,8 @@ public class Peta{
         return valid;
     }
 
+    // memilih gerakan engimon
+    // engimon liar hanya mungkin bergerak dalam 4 arah : atas, bawah, kiri, dan kanan
     public void PilihGerak(int barisE, int kolomE, int index){
         Random rand = new Random();
         int coba = 0; 
@@ -474,6 +521,7 @@ public class Peta{
         
     }
 
+    // prosedur untuk menggerakkan semua engimon liar yang terdapat pada peta dan daftar engimon liar
     public void GerakinEngimonLiar(){
         int i = 0;
         for(PosisiEngimon e : this.DaftarEngimon){
@@ -481,6 +529,35 @@ public class Peta{
             i++;
         }
     }
+
+    //delete engimon liar yang mati
+    // hapus dari daftar engimon liar dan hapus dari peta
+    public void deleteDeadEngimon(){
+        //System.out.println(this.DaftarEngimon.size());
+        ArrayList<PosisiEngimon> dead = new ArrayList<PosisiEngimon>();
+        for(int i = 0; i < this.DaftarEngimon.size(); i++){
+            if(this.DaftarEngimon.get(i).getEngimon().getStatus() == false){
+                dead.add(this.DaftarEngimon.get(i));
+            }
+            
+        }
+        // hapus engimon yang udah mati dari peta dan daftar engimon
+        for(PosisiEngimon e : dead){
+            DeleteEngimon(e);
+        }
+ 
+    }
+
+    // prosedur untuk menambahankan Exp dari engimon liar
+    public void addExpEngimonLiar(){
+        for(PosisiEngimon e : this.DaftarEngimon){
+            e.getEngimon().addEXP(100); // ditambahkan exp 100 (bisa langsung naik level)
+        }
+        // untuk menghapus engimon yang telah mati
+        deleteDeadEngimon();
+    }
+
+    
 
     public static void main(String[] args) {
         Peta p = new Peta(16,16);
@@ -499,9 +576,31 @@ public class Peta{
         
         p.SpawnEngimon();
         p.PrintPeta();
-        p.PrintDaftarEngimon();
-        p.GerakinEngimonLiar();
+        //p.PrintDaftarEngimon();
+
+        //test delete
+        // KatalogSpecies katalogSpecies = new KatalogSpecies();
+        // Engimon engimon = new Engimon(katalogSpecies.getSpeciesFromIndex(15), 10, 0, 0);
+        // PosisiEngimon e = new PosisiEngimon(1,1,engimon);
+        // p.AddEngimon(e, 'T');
+        // p.PrintDaftarEngimon();
+        // p.PrintPeta();
+        // p.DeleteEngimon(1, 1);
+        // p.PrintDaftarEngimon();
+        // p.PrintPeta();
+
+        //test add exp
+        p.addExpEngimonLiar();
+        //p.PrintDaftarEngimon();
+        //test add exp jika engimon mati
+        for(int i = 0; i<100; i++){
+            p.addExpEngimonLiar();
+        }
         p.PrintPeta();
         p.PrintDaftarEngimon();
+
+        // p.GerakinEngimonLiar();
+        // p.PrintPeta();
+        // p.PrintDaftarEngimon();
     }
 }
