@@ -13,6 +13,11 @@ public class Main {
             map.BacaFile("map.txt");
             player1 = new Player(map);
             player1.starterPack();
+            try {
+                player1.activateEngimon(0);
+            } catch (Exception e) {
+                //TODO: handle exception
+            }
             player1.spawn();
         }else{
             player1 = Player.load();
@@ -25,7 +30,8 @@ public class Main {
         
         command = scanner.nextLine();
         boolean isLastCommandMove = false;
-        while(!command.equals("exit")){
+        boolean isGameOver = false;
+        while(!command.equals("exit") && !isGameOver){
             try {
                 if (command.equals("save")){
                     player1.save();
@@ -36,7 +42,7 @@ public class Main {
                 }
                 if (command.equals("w")){
                     player1.moveW();
-                    isLastCommandMove = false;
+                    isLastCommandMove = true;
                 }
                 if (command.equals("s")){
                     player1.moveS();
@@ -80,6 +86,7 @@ public class Main {
                 if (player1.getStatusEA() && isLastCommandMove){
                     try {
                         player1.moveAE(command);
+                        System.out.println("Test");
                     } catch (Exception e) {
                         //TODO: handle exception
                         e.printStackTrace();
@@ -87,13 +94,16 @@ public class Main {
                         System.out.println(String.format("Relocating to %d %d", player1.getYEA(), player1.getXEA()));
                     }
                 }
+                isGameOver = player1.isGameOver();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
             isLastCommandMove = false;
-            System.out.println("Enter command : ");
-            command = scanner.nextLine();
+            if (!isGameOver) {
+                System.out.println("Enter command : ");
+                command = scanner.nextLine();
+            }
         }
         scanner.close();
     }

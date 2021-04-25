@@ -32,7 +32,7 @@ public class Player {
     public void starterPack(){
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         KatalogSkill katalogSkill = new KatalogSkill();
-        Engimon E1 = new Engimon(katalogSpecies.getSpeciesFromIndex(8), "Alam", "", "", "", "", 1, 0, 0);
+        Engimon E1 = new Engimon(katalogSpecies.getSpeciesFromIndex(8), "Alam", "", "", "", "", 13, 0, 0);
         Engimon E2 = new Engimon(katalogSpecies.getSpeciesFromIndex(9), "Chelsie", "", "", "", "", 1, 0, 0);
         Engimon E3 = new Engimon(katalogSpecies.getSpeciesFromIndex(10), "Monica", "", "", "", "", 1, 0, 0);
         try {
@@ -370,7 +370,6 @@ public class Player {
     public boolean battle(Engimon enemy) {
         Scanner sc = new Scanner(System.in);  
         int ongoing = 1;
-        int attempt = 1;
         boolean hasil = true;
         while(ongoing == 1) {
             int answer;
@@ -399,6 +398,7 @@ public class Player {
             System.out.println("3. run");
             System.out.println("Choose a command : ");
             answer = sc.nextInt();
+            sc.nextLine();
             if(answer == 1) {
                 //this->drawing(18+4);
                 //ongoing = attack(P,P.getActiveEngimon(),enemy,attempt); // error soalnya harusnya pake reference
@@ -543,6 +543,7 @@ public class Player {
             }
             else if(answer == 3) {
                 System.out.println("You successfully fled");
+                hasil = false;
                 ongoing = 0;
                 //ongoing = run(attempt);
                 //int x = rand() % 2 + 1;
@@ -567,7 +568,6 @@ public class Player {
             }
     
         }
-        sc.close();
         return hasil;
     }
     
@@ -596,13 +596,13 @@ public class Player {
         int y = coorP.getFirst();
         int x = coorP.getSecond();
         try {
-            if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o' && map.GetElementPeta(y-1,x) != 'X')){
+            if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y-1,x) != 'X')){
                 return true;
-            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o' && map.GetElementPeta(y,x+1) != 'X')){
+            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x+1) != 'X')){
                 return true;
-            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y+1,x) != 'X')){
+            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y+1,x) != 'X')){
                 return true;
-            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y,x-1) != 'X')){
+            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x-1) != 'X')){
                 return true;
             }
             return false;
@@ -623,16 +623,16 @@ public class Player {
         int a;
         int b;
         try {
-            if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o' && map.GetElementPeta(y-1,x) != 'X')){
+            if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o'&& map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y-1,x) != 'X')){
                 a= y-1;
                 b=x;
-            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o' && map.GetElementPeta(y,x+1) != 'X')){
+            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o'&& map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x+1) != 'X')){
                 a = y;
                 b=x+1;
-            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y+1,x) != 'X')){
+            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y+1,x) != 'X')){
                 a=y+1;
                 b=x;
-            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y,x-1) != 'X')){
+            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x-1) != 'X')){
                 a = y;
                 b = x-1;
             }else {a = -1; b=-1;}
