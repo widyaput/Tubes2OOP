@@ -717,7 +717,7 @@ public class Player {
                 throw(new CustomException("You don't any active Engimon"));
             }
             else {
-                throw(new CustomException("There are no enemy eround"));
+                throw(new CustomException("There are no enemy around"));
             }
         }
     }
@@ -727,12 +727,16 @@ public class Player {
         int x = coorP.getSecond();
         try {
             if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y-1,x) != 'X')){
+                // System.out.println(this.map.GetElementPeta(y-1, x));
                 return true;
             }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x+1) != 'X')){
+                // System.out.println(this.map.GetElementPeta(y, x+1));
                 return true;
             }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y+1,x) != 'X')){
+                // System.out.println(this.map.GetElementPeta(y+1, x));
                 return true;
             }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x-1) != 'X')){
+                // System.out.println(this.map.GetElementPeta(y, x-1));
                 return true;
             }
             return false;
@@ -861,6 +865,19 @@ public class Player {
         }
 
         
+    }
+
+    public void listCommand(){
+        System.out.println("wasd - MOVE");
+        System.out.println("map - show map");
+        System.out.println("viewEng - show inventory engimon");
+        System.out.println("viewSkill - show inventory skill");
+        System.out.println("activate - activate engimon");
+        System.out.println("rename - rename engimon");
+        System.out.println("remove - remove skill item");
+        System.out.println("learn - learn skill");
+        System.out.println("battle - battle enemy");
+        System.out.println("help - show this list");
     }
 
     public static Player load(){

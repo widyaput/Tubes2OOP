@@ -69,6 +69,27 @@ public class Main {
                     player1.activateEngimon(number-1);
                     System.out.println("");
                 }
+                if (command.equals("rename")){
+                    player1.viewListEng();
+                    System.out.println("Choose engimon (use number): ");
+                    int number = scanner.nextInt();
+                    scanner.nextLine();
+                    String nama = scanner.nextLine();
+                    player1.getListEng().getElement(number-1).rename(nama);
+                }
+
+                if (command.equals("remove")){
+                    player1.viewListSkill();
+                    System.out.println("Choose skill item (use number): ");
+                    int number = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("How many items you want to remove?");
+                    int amount = scanner.nextInt();
+                    scanner.nextLine();
+                    player1.getListSkill().removeXElement(number-1, amount);
+
+                }
+
                 if (command.equals("learn")){
                     if (!player1.getStatusEA()){
                         throw new CustomException("No actie engimon");
@@ -83,10 +104,14 @@ public class Main {
                     player1.initBattle();
                 }
 
+                if (command.equals("help")){
+                    player1.listCommand();
+                }
+
                 if (player1.getStatusEA() && isLastCommandMove){
                     try {
                         player1.moveAE(command);
-                        System.out.println("Test");
+                        
                     } catch (Exception e) {
                         //TODO: handle exception
                         e.printStackTrace();
