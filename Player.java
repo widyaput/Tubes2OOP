@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
 import java.io.FileWriter;
@@ -7,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.File;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.stream.*;
 
 public class Player {
     private Engimon activeEngimon;
@@ -135,7 +137,6 @@ public class Player {
         System.out.println("Masukkan nama anak : ");
         Scanner scanner = new Scanner(System.in);
         String nama = scanner.nextLine();
-        scanner.close();
         
         if (A.getElement().get(0) == B.getElement().get(0)) {
             spec = A.getSpecies();
@@ -193,7 +194,9 @@ public class Player {
                 }
             }
         }
-        
+
+        List<Skill> dummy = allSkill.stream().sorted((a,b) -> (a.getMasteryLevel() > b.getMasteryLevel() ? -1 : 1)).collect(Collectors.toList());
+        allSkill = new ArrayList<Skill>(dummy);
         /*
         Old sorting algorithm
         int max;
@@ -258,6 +261,10 @@ public class Player {
 
     public void setCoorEA(Pair<Integer,Integer> coor){
         this.coorEA = coor;
+    }
+
+    public Peta getMap(){
+        return this.map;
     }
 
     public Integer getXCoor(){
