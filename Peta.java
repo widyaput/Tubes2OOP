@@ -1,8 +1,10 @@
+package sample;
+
 import java.util.*;
 import java.io.*;
 
 public class Peta{
-    private final int max_spawn = 4;
+    private final int max_spawn = 10;
     private final int def = 16;
     private int baris;
     private int kolom;
@@ -291,32 +293,6 @@ public class Peta{
         Engimon engimon = new Engimon(spesies, level, 0, 0);
         return engimon;
     }
-
-    // memilih level dari engimon liar yang akan di spawn, 
-    // activeLevel adalah level tertinggi engimon pada inventory player saat sekarang
-    public int selectlevel(int activeLevel){
-        int level = 0;
-        Random rand = new Random();
-        if(activeLevel < 5) {
-            while(level < activeLevel){
-                level = rand.nextInt(7);
-            }
-        } else if(activeLevel < 10 && activeLevel >= 5){
-            while(level < activeLevel){
-                level = rand.nextInt(13);
-            }
-        } else if(activeLevel < 20 && activeLevel >= 10){
-            while(level < activeLevel){
-                level = rand.nextInt(25);
-            }
-        } else {
-            while(level < activeLevel){
-                level = rand.nextInt(35);
-            }
-        }
-        
-        return level;
-    }
     
     
     //0 : untuk yg  Grassland; 1 : untuk yg sea; 2 : untuk yg mountains, 3 : untuk tundra, 4 : untuk yg dual element
@@ -380,7 +356,8 @@ public class Peta{
             engimonTerpilih = draft.charAt(rand.nextInt(8));
             posisi = RandomPosisi(engimonTerpilih, CekElementEngimonRandom(engimonTerpilih));
             //random level
-            level = selectlevel(activeLevel);
+            // level = selectlevel(activeLevel);
+            level = activeLevel + rand.nextInt(5);
             //create obj engimon
             Engimon e = CreateEngimon(engimonTerpilih, level);
             PosisiEngimon engimon = new PosisiEngimon(GetBarisObjek(posisi), GetKolomObjek(posisi), e); 
@@ -426,7 +403,7 @@ public class Peta{
             //ubah posisi engimon yg lama jadi element petanya
             SetElementPeta(barisE, kolomE, simbolPeta);
         }  catch(Exception exc){
-            System.out.println(exc.getMessage());
+            // System.out.println(exc.getMessage());
         }
         
     }
@@ -452,7 +429,7 @@ public class Peta{
                 }
             }
         } catch(Exception exc){
-            System.out.println(exc.getMessage());
+            // System.out.println(exc.getMessage());
         }
         return 0;
     }
@@ -496,7 +473,7 @@ public class Peta{
             }
            
         }  catch(Exception exc){
-            System.out.println(exc.getMessage());
+            // System.out.println(exc.getMessage());
         }
         return valid;
     }
