@@ -163,8 +163,6 @@ public class Player {
                 }
             }
         }
-        A.downLevel(3);
-        B.downLevel(3);
         Engimon C = new Engimon(spec, nama, A.getSpecies().getName(), A.getName(), B.getSpecies().getName(), B.getName(), this.skillanak(A, B, spec), 1, 0, 100);
         
         return C;
