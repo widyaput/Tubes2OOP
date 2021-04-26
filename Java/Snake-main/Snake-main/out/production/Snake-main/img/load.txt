@@ -1,0 +1,61 @@
+16 16
+ooooooooooo-----
+oooooooooo------
+ooooooooo-------
+ooooooo---------
+oooooo----------
+oooo-----------#
+o-------------##
+------------####
+-----------#####
+----------######
+^^^^^^----######
+^^^^^^----######
+^^^^^^----######
+^^^^^^-----#####
+^^^^^^------####
+^^^^^^-------###
+ooooosooooog----
+oooowooooo------
+oooowoooo-------
+oooooooPX-------
+oooooo----------
+oooo-----------#
+o------g------##
+------------####
+-----------#####
+----------######
+^^^^^^----######
+^^^^^^----######
+^^^^^^----######
+^^^f^s-----#####
+^^^^^^----g-####
+^^^^^^-l-----###
+10
+13 3 Kangaskhan 9 0 400
+0 11 Victreebel 8 0 400
+0 5 Vaporeon 6 0 400
+1 4 Jynx 6 0 400
+2 4 Dewgong 9 0 400
+14 10 Victreebel 7 0 400
+6 7 Victreebel 9 0 400
+13 5 Snorlax 8 0 400
+14 4 Vaporeon 8 0 400
+15 7 Voltorb 6 0 400
+3 7
+1
+3 8
+Kangaskhan Alam null null null null 13 0 0
+1
+Inferno 1
+2
+Jynx Chelsie null null null null 1 0 0
+1
+Aquary Tide 1
+Magnemite Monica null null null null 1 0 0
+1
+Titanomachia 1
+3
+Mystic Lash 1
+Depthsurge 1
+Maralagidyne 1
