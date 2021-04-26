@@ -760,13 +760,13 @@ public class Player {
             if ( y-1 >= 0 && (map.GetElementPeta(y-1,x) != '-' && map.GetElementPeta(y-1,x) != 'o'&& map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y-1,x) != 'X')){
                 a= y-1;
                 b=x;
-            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o'&& map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x+1) != 'X')){
+            }else if (x+1 < map.GetKolom() && (map.GetElementPeta(y,x+1) != '-' && map.GetElementPeta(y,x+1) != 'o'&& map.GetElementPeta(y,x+1) != '#' && map.GetElementPeta(y,x+1) != '^' && map.GetElementPeta(y,x+1) != 'X')){
                 a = y;
                 b=x+1;
-            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y+1,x) != 'X')){
+            }else if (y+1 < map.GetBaris() && (map.GetElementPeta(y+1,x) != '-' && map.GetElementPeta(y+1,x) != 'o' && map.GetElementPeta(y+1,x) != '#' && map.GetElementPeta(y+1,x) != '^' && map.GetElementPeta(y+1,x) != 'X')){
                 a=y+1;
                 b=x;
-            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y-1,x) != '#' && map.GetElementPeta(y-1,x) != '^' && map.GetElementPeta(y,x-1) != 'X')){
+            }else if (x-1 >= 0 && (map.GetElementPeta(y,x-1) != '-' && map.GetElementPeta(y,x-1) != 'o' && map.GetElementPeta(y,x-1) != '#' && map.GetElementPeta(y,x-1) != '^' && map.GetElementPeta(y,x-1) != 'X')){
                 a = y;
                 b = x-1;
             }else {a = -1; b=-1;}
