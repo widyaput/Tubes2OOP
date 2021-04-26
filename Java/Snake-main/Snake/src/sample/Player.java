@@ -36,8 +36,8 @@ public class Player {
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         KatalogSkill katalogSkill = new KatalogSkill();
         Engimon E1 = new Engimon(katalogSpecies.getSpeciesFromIndex(8), "Alam", "", "", "", "", 13, 0, 0);
-        Engimon E2 = new Engimon(katalogSpecies.getSpeciesFromIndex(9), "Chelsie", "", "", "", "", 1, 0, 0);
-        Engimon E3 = new Engimon(katalogSpecies.getSpeciesFromIndex(10), "Monica", "", "", "", "", 1, 0, 0);
+        Engimon E2 = new Engimon(katalogSpecies.getSpeciesFromIndex(9), "Chelsie", "", "", "", "", 13, 0, 0);
+        Engimon E3 = new Engimon(katalogSpecies.getSpeciesFromIndex(10), "Monica", "", "", "", "", 13, 0, 0);
         try {
             this.listEngimon.addElement(E1);
             this.listEngimon.addElement(E2);
@@ -132,13 +132,13 @@ public class Player {
         }
     }
 
-    public Engimon breeding(Engimon A, Engimon B) throws CustomException{
+    public Engimon breeding(Engimon A, Engimon B, String nama) throws CustomException{
         if (A.getLevel() < 4 || B.getLevel() < 4) throw new CustomException("Not enough level to breed");
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         Species spec = null;
         System.out.print("Masukkan nama anak : ");
-        Scanner scanner = new Scanner(System.in);
-        String nama = scanner.nextLine();
+//        Scanner scanner = new Scanner(System.in);
+//        String nama = scanner.nextLine();
 
         if(A.getLevel() > 3 && B.getLevel() > 3) {
             A.downLevel(3);
@@ -497,8 +497,8 @@ public class Player {
 
     // ini harus diubah
     public void spawn(){
-        // int highestLevel = this.listEngimon.getStorage().stream().map(a -> a.getLevel()).reduce((a,b) -> a > b ? a : b).get();
-        this.map.SpawnEngimon(3);
+        int highestLevel = this.listEngimon.getStorage().stream().map(a -> a.getLevel()).reduce((a,b) -> a > b ? a : b).get();
+        this.map.SpawnEngimon(highestLevel);
     }
 
     public boolean battle(Engimon enemy) {
@@ -785,7 +785,7 @@ public class Player {
     }
 
     public void save() throws IOException{
-        FileWriter write = new FileWriter("load.txt", false);
+        FileWriter write = new FileWriter("C:\\Users\\ACER\\Downloads\\Snake\\Snake-main\\Snake\\src\\img\\load.txt", false);
         PrintWriter print = new PrintWriter(write);
         print.printf("%d %d\n", this.map.GetBaris(), this.map.GetKolom());
         try {
@@ -869,9 +869,12 @@ public class Player {
 
     public static Player load(){
         try {
-            Scanner reader = new Scanner(new File("load.txt"));
+//            System.out.println("wadidaww2");
+            Scanner reader = new Scanner(new File("C:\\Users\\ACER\\Downloads\\Snake\\Snake-main\\Snake\\src\\img\\load.txt"));
             String dummy = reader.nextLine();
+            System.out.println(dummy.length());
             int baris, kolom;
+            System.out.println("wadidaw");
             Pattern digit = Pattern.compile("\\d+");
             Matcher m;
             Pattern str = Pattern.compile("[a-z]+", Pattern.CASE_INSENSITIVE);
@@ -897,6 +900,7 @@ public class Player {
                 }
             }
             map.LoadPeta(petaisi, petatetap);
+            System.out.println("wadidaw2");
             KatalogSkill skillfac = new KatalogSkill();
             KatalogSpecies specfac = new KatalogSpecies();
             int wild;
@@ -924,6 +928,7 @@ public class Player {
                 map.AddEngimon(p, map.GetElementPeta(posisi1, posisi2));
             }
             Player p1 = new Player(map);
+            System.out.println("wadidaw3");
             int coor1, coor2;
             dummy = reader.nextLine();
             m = digit.matcher(dummy);
@@ -978,6 +983,7 @@ public class Player {
                 p1.isThereActiveEngimon = true;
                 p1.setCoorEA(Pair.makePair(coor1, coor2));
                 p1.map.SetElementPeta(coor1, coor2, 'X');
+                System.out.println("wadidaw4");
             }
             int eng = Integer.parseInt(reader.nextLine());
             for (int j = 0; j < eng; j++){
@@ -1029,7 +1035,7 @@ public class Player {
                 s.setMasteryLevel(mlvl);
                 p1.addSkillItem(s);
             }
-
+            System.out.println("wadidaw5");
             return p1;
         } catch (Exception e) {
             System.out.println("Failed to load");
