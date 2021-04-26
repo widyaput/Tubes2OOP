@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class KatalogSkill implements Iterable{
+public class KatalogSkill implements Iterable<Skill>{
     private ArrayList<Skill> skill_collection;
 
     /**
@@ -96,7 +96,7 @@ public class KatalogSkill implements Iterable{
         return 0;
     }
     @Override
-    public Iterator iterator() {
+    public Iterator<Skill> iterator() {
         return this.skill_collection.iterator();
     }
     /**

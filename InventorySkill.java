@@ -23,8 +23,6 @@ public class InventorySkill extends Inventory<Skill> {
         else throw (new CustomException("Inventory penuh"));
     }
 
-
-
     public Integer getIndex(Skill element) throws CustomException{
         for (int i =0; i < this.storage.size(); i++) {
             if (this.storage.get(i).equals(element)){
@@ -33,15 +31,6 @@ public class InventorySkill extends Inventory<Skill> {
         }
         throw new CustomException("Invalid index");
     }
-
-    // public Integer getAmount(Integer element){
-    //     for (int i =0; i < this.storage.size(); i++) {
-    //         if (this.storage.get(i).equals(element)){
-    //             return this.jumlah.get(i);
-    //         }
-    //     }
-    //     return 0;
-    // }
 
     public Skill removeElement(int index) throws CustomException{
         Skill dummy;
@@ -106,16 +95,19 @@ public class InventorySkill extends Inventory<Skill> {
 
         Map<Integer, Integer> swapMap = new HashMap<Integer, Integer> (indeks.size());
         List<Integer> swapFrom = new ArrayList<Integer>(indeks.size()), swapTo = new ArrayList<Integer>(indeks.size());
-        
+        Set<Integer> keyMap = new HashSet<Integer>();
+
+
         for (int i=0; i < key.size(); i++){
             int k = indeks.get(i);
-            while (i!=k && swapMap.containsKey(k)){
+            while (i!=k && keyMap.contains(k)){
                 k = swapMap.get(k);
             }
 
             swapFrom.add(i);
             swapTo.add(k);
             swapMap.put(i,k);
+            keyMap.add(i);
         }
 
         for (int i =0; i < v1.size(); i++){

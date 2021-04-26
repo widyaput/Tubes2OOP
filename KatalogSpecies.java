@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class KatalogSpecies implements Iterable{
+public class KatalogSpecies implements Iterable<Species>{
     private ArrayList<Species> species;
 
     /**
@@ -86,7 +86,7 @@ public class KatalogSpecies implements Iterable{
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Species> iterator() {
         return this.species.iterator();
     }
 

@@ -233,7 +233,7 @@ public class Engimon {
     }
     public void downLevel(int decr){
         this.level-=decr;
-        this.cumulativeEXP-=(decr*100);
+        this.cumulativeEXP = Math.max(this.cumulativeEXP - decr*100,0);
     }
 
     /**

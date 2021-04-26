@@ -131,7 +131,8 @@ public class Player {
         }
     }
 
-    public Engimon breeding(Engimon A, Engimon B) {
+    public Engimon breeding(Engimon A, Engimon B) throws CustomException{
+        if (A.getLevel() < 4 || B.getLevel() < 4) throw new CustomException("Not enough level to breed");
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         Species spec = null;
         System.out.println("Masukkan nama anak : ");
@@ -158,7 +159,8 @@ public class Player {
                 spec = B.getSpecies();
             }
         }
-        
+        A.downLevel(3);
+        B.downLevel(3);
         Engimon C = new Engimon(spec, nama, A.getSpecies().getName(), A.getName(), B.getSpecies().getName(), B.getName(), this.skillanak(A, B, spec), 1, 0, 100);
         
         return C;
@@ -241,11 +243,11 @@ public class Player {
         // If parents don't have the unique skill of child's species,
         // inherit that skill
         if (!inheritUniquePar) {
+            allSkill.add(unique);
             for (int i = n; i > 0; i--) {
                 allSkill.set(i, allSkill.get(i - 1));
             }
             allSkill.set(0, unique);
-            n = n + 1;
         }
 
         getSkill.clear();
