@@ -135,28 +135,32 @@ public class Player {
         if (A.getLevel() < 4 || B.getLevel() < 4) throw new CustomException("Not enough level to breed");
         KatalogSpecies katalogSpecies = new KatalogSpecies();
         Species spec = null;
-        System.out.println("Masukkan nama anak : ");
+        System.out.print("Masukkan nama anak : ");
         Scanner scanner = new Scanner(System.in);
         String nama = scanner.nextLine();
         
-        if (A.getElement().get(0) == B.getElement().get(0)) {
-            spec = A.getSpecies();
-        } else {
-            if (A.getAdvElement(B.getElement().get(0)) > B.getAdvElement(A.getElement().get(0))) {
-                  spec = A.getSpecies();
-            } else if (A.getAdvElement(B.getElement().get(0)) == B.getAdvElement(A.getElement().get(0))) {
-                if ((A.getSpecies().hasElement(Element.FIRE) && B.getSpecies().hasElement(Element.ELECTRIC)) ||
-                    (B.getSpecies().hasElement(Element.FIRE) && A.getSpecies().hasElement(Element.ELECTRIC))) {
-                    spec = katalogSpecies.getSpeciesFromIndex(5);
-                } else if ((A.getSpecies().hasElement(Element.WATER) && B.getSpecies().hasElement(Element.ICE)) ||
-                           (B.getSpecies().hasElement(Element.WATER) && A.getSpecies().hasElement(Element.ICE))) {
-                    spec = katalogSpecies.getSpeciesFromIndex(6);
-                } else if ((A.getSpecies().hasElement(Element.WATER) && B.getSpecies().hasElement(Element.GROUND)) ||
-                           (B.getSpecies().hasElement(Element.WATER) && A.getSpecies().hasElement(Element.GROUND))) {
-                    spec = katalogSpecies.getSpeciesFromIndex(7);
-                }
+        if(A.getLevel() > 3 && B.getLevel() > 3) {
+            A.downLevel(3);
+            B.downLevel(3);
+            if (A.getElement().get(0) == B.getElement().get(0)) {
+                spec = A.getSpecies();
             } else {
-                spec = B.getSpecies();
+                if (A.getAdvElement(B.getElement().get(0)) > B.getAdvElement(A.getElement().get(0))) {
+                    spec = A.getSpecies();
+                } else if (A.getAdvElement(B.getElement().get(0)) == B.getAdvElement(A.getElement().get(0))) {
+                    if ((A.getSpecies().hasElement(Element.FIRE) && B.getSpecies().hasElement(Element.ELECTRIC)) ||
+                        (B.getSpecies().hasElement(Element.FIRE) && A.getSpecies().hasElement(Element.ELECTRIC))) {
+                        spec = katalogSpecies.getSpeciesFromIndex(5);
+                    } else if ((A.getSpecies().hasElement(Element.WATER) && B.getSpecies().hasElement(Element.ICE)) ||
+                            (B.getSpecies().hasElement(Element.WATER) && A.getSpecies().hasElement(Element.ICE))) {
+                        spec = katalogSpecies.getSpeciesFromIndex(6);
+                    } else if ((A.getSpecies().hasElement(Element.WATER) && B.getSpecies().hasElement(Element.GROUND)) ||
+                            (B.getSpecies().hasElement(Element.WATER) && A.getSpecies().hasElement(Element.GROUND))) {
+                        spec = katalogSpecies.getSpeciesFromIndex(7);
+                    }
+                } else {
+                    spec = B.getSpecies();
+                }
             }
         }
         A.downLevel(3);
@@ -216,26 +220,22 @@ public class Player {
         }
         */
         
-        // Skill unik untuk species dari anak
+        // Check if there is unique skill of child's species
         Skill unique = spec.getBaseSkill();
         boolean inheritUniquePar = false;
+        for (Skill s : allSkill) {
+            if (s.getName().equals(unique.getName())) {
+                inheritUniquePar = true;
+            }
+        }
         
-        // Remove duplicate skills, and check if there is unique skill of child's species
+        // Remove duplicate skills
         for (int i = 0; i < n - 1; i++) {
             for (int j = i + 1; j < n; j++) {
-                if (allSkill.get(i) == unique) {
-                    inheritUniquePar = true;
-                }
-                if (allSkill.get(i) == allSkill.get(j)) {   
-                    int mastery = allSkill.get(i).getMasteryLevel() + 1;
-                    if (mastery > 3) {
-                        mastery = 3;
-                    }
-                    allSkill.get(i).setMasteryLevel(mastery);
+                if (allSkill.get(i).getName().equals(allSkill.get(j).getName())) {   
+                    allSkill.get(i).incrMasteryLevel();
+                    allSkill.remove(j);
                     n = n - 1;
-                    for (int k = j; k < n; k++) {
-                        allSkill.set(k, allSkill.get(k + 1));
-                    }
                 }
             }
         }
