@@ -43,10 +43,10 @@ Kangaskhan Alam null null null null 1 0 0
 1
 Inferno 1
 2
-Jynx Chelsie null null null null 5 0 0
+Jynx Chelsie null null null null 4 0 400
 1
 Aquary Tide 1
-Magnemite Monica null null null null 5 0 0
+Magnemite Monica null null null null 4 0 400
 1
 Titanomachia 1
 3
