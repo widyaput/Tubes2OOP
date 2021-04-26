@@ -238,49 +238,49 @@ public class Peta{
         int random = rand.nextInt(2);
         Species spesies;
 
-        if(e == 'f' || e == 'F'){
+        if(e == 'f'){
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(0);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(8);
             }
-        } else if(e == 'e' || e == 'E'){
+        } else if(e == 'e'){
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(2);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(10);
             }
-        } else if(e == 'g' || e == 'G'){
+        } else if(e == 'g'){
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(3);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(11);
             }
-        } else if(e == 'w' || e == 'W') {
+        } else if(e == 'w') {
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(1);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(9);
             }
-        } else if(e == 'i' || e == 'I') {
+        } else if(e == 'i') {
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(4);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(12);
             }
-        } else  if(e == 'l' || e == 'L') {
+        } else  if(e == 'l') {
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(5);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(13);
             }
-        } else  if(e == 's' || e == 'S') {
+        } else  if(e == 's') {
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(6);
             } else {
                 spesies = katalogSpecies.getSpeciesFromIndex(14);
             }
-        } else  { //if(e == 'n' || e == 'N')
+        } else  { //if(e == 'n')
             if(random == 0){
                 spesies = katalogSpecies.getSpeciesFromIndex(7);
             } else {
@@ -297,7 +297,11 @@ public class Peta{
     public int selectlevel(int activeLevel){
         int level = 0;
         Random rand = new Random();
-        if(activeLevel < 10) {
+        if(activeLevel < 5) {
+            while(level < activeLevel){
+                level = rand.nextInt(7);
+            }
+        } else if(activeLevel < 10 && activeLevel >= 5){
             while(level < activeLevel){
                 level = rand.nextInt(13);
             }
@@ -317,13 +321,13 @@ public class Peta{
     
     //0 : untuk yg  Grassland; 1 : untuk yg sea; 2 : untuk yg mountains, 3 : untuk tundra, 4 : untuk yg dual element
     public int CekElementEngimonRandom(char engimonTerpilih){
-        if( engimonTerpilih == 'g' || engimonTerpilih == 'e' || engimonTerpilih == 'G' || engimonTerpilih == 'E'){
+        if( engimonTerpilih == 'g' || engimonTerpilih == 'e'){
             return 0;
-        } else if(engimonTerpilih == 'w' || engimonTerpilih == 'W'){
+        } else if(engimonTerpilih == 'w'){
             return 1;
-        } else if(engimonTerpilih == 'f' || engimonTerpilih == 'F'){
+        } else if(engimonTerpilih == 'f'){
             return 2;
-        } else if(engimonTerpilih == 'i' || engimonTerpilih == 'I'){
+        } else if(engimonTerpilih == 'i'){
             return 3;
         }
         //untuk yg double element
@@ -368,12 +372,12 @@ public class Peta{
     public void SpawnEngimon(int activeLevel){
         int posisi, level;
         int BanyakSpawn = max_spawn - this.DaftarEngimon.size();
-        String draft = "fFgGeEwiWIlLsSnN";
+        String draft = "fgewilsn";
         char engimonTerpilih;
         Random rand = new Random();
         // int activeLevel = 3; //level dari active engimon
         for(int i = 0; i < BanyakSpawn; i++){
-            engimonTerpilih = draft.charAt(rand.nextInt(16));
+            engimonTerpilih = draft.charAt(rand.nextInt(8));
             posisi = RandomPosisi(engimonTerpilih, CekElementEngimonRandom(engimonTerpilih));
             //random level
             level = selectlevel(activeLevel);
@@ -428,6 +432,7 @@ public class Peta{
     }
 
     // mengecek apakah tempat berpindah engimon sudah sesuai dengan jenis nya
+    //0 : untuk yg  Grassland; 1 : untuk yg sea; 2 : untuk yg mountains, 3 : untuk tundra, 4 : untuk yg dual element
     public int CekValid(int b, int k, char charEngimon){
         try{
             int tmp = CekElementEngimonRandom(charEngimon);
@@ -516,7 +521,7 @@ public class Peta{
                 UbahPosisi(barisE, kolomE, pilih, index); //ubah nilai posisi dari engimon dan ubah element di peta
             }
         } catch(Exception exc){
-            // System.out.println(exc.getMessage());
+            System.out.println(exc.getMessage());
         }
         
     }
@@ -559,48 +564,48 @@ public class Peta{
 
     
 
-    public static void main(String[] args) {
-        Peta p = new Peta(16,16);
-        p.BacaFile("map.txt");
-        //p.PrintPeta();
-        // System.out.println(p.GetElementPeta(0, 7));
-        // System.out.println(p.GetElementPeta(7, 0));
-        // try{
-        //     System.out.println(p.GetElementPeta(7, 0));
-        //     System.out.println(p.GetElementPeta(20, 1));
-        //     System.out.println(p.GetElementPeta(0, 7));
-        // } catch(Exception exc){
-        //     //
-        //     System.out.println(exc.getMessage());
-        // }
-        
-        p.SpawnEngimon(3);
-        p.PrintPeta();
-        //p.PrintDaftarEngimon();
-
-        //test delete
-        // KatalogSpecies katalogSpecies = new KatalogSpecies();
-        // Engimon engimon = new Engimon(katalogSpecies.getSpeciesFromIndex(15), 10, 0, 0);
-        // PosisiEngimon e = new PosisiEngimon(1,1,engimon);
-        // p.AddEngimon(e, 'T');
-        // p.PrintDaftarEngimon();
-        // p.PrintPeta();
-        // p.DeleteEngimon(1, 1);
-        // p.PrintDaftarEngimon();
-        // p.PrintPeta();
-
-        //test add exp
-        p.addExpEngimonLiar();
-        //p.PrintDaftarEngimon();
-        //test add exp jika engimon mati
-        for(int i = 0; i<100; i++){
-            p.addExpEngimonLiar();
-        }
-        p.PrintPeta();
-        p.PrintDaftarEngimon();
-
-        // p.GerakinEngimonLiar();
-        // p.PrintPeta();
-        // p.PrintDaftarEngimon();
-    }
+//    public static void main(String[] args) {
+//        Peta p = new Peta(16,16);
+//        p.BacaFile("map.txt");
+//        //p.PrintPeta();
+//        // System.out.println(p.GetElementPeta(0, 7));
+//        // System.out.println(p.GetElementPeta(7, 0));
+//        // try{
+//        //     System.out.println(p.GetElementPeta(7, 0));
+//        //     System.out.println(p.GetElementPeta(20, 1));
+//        //     System.out.println(p.GetElementPeta(0, 7));
+//        // } catch(Exception exc){
+//        //     //
+//        //     System.out.println(exc.getMessage());
+//        // }
+//
+//        p.SpawnEngimon(3);
+//        p.PrintPeta();
+//        //p.PrintDaftarEngimon();
+//
+//        //test delete
+//        // KatalogSpecies katalogSpecies = new KatalogSpecies();
+//        // Engimon engimon = new Engimon(katalogSpecies.getSpeciesFromIndex(15), 10, 0, 0);
+//        // PosisiEngimon e = new PosisiEngimon(1,1,engimon);
+//        // p.AddEngimon(e, 'T');
+//        // p.PrintDaftarEngimon();
+//        // p.PrintPeta();
+//        // p.DeleteEngimon(1, 1);
+//        // p.PrintDaftarEngimon();
+//        // p.PrintPeta();
+//
+//        //test add exp
+//        p.addExpEngimonLiar();
+//        //p.PrintDaftarEngimon();
+//        //test add exp jika engimon mati
+//        for(int i = 0; i<100; i++){
+//            p.addExpEngimonLiar();
+//        }
+//        p.PrintPeta();
+//        p.PrintDaftarEngimon();
+//
+//        // p.GerakinEngimonLiar();
+//        // p.PrintPeta();
+//        // p.PrintDaftarEngimon();
+//    }
 }
