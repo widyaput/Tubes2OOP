@@ -59,7 +59,7 @@ public class Engimon {
     /**
      * Ctor untuk inisiasi engimon melalui spawn Engimon
      * @param _species
-     * @param _name
+//     * @param _name
      * @param _level
      * @param _EXP
      * @param _cumulativeEXP

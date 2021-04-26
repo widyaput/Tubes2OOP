@@ -12,7 +12,7 @@ public class Peta{
     private Vector<Character> isiPeta;
     private Vector<Character> PetaTetap;
     private Vector<PosisiEngimon> DaftarEngimon;
-    
+
 
     public Peta(){
         this.baris = def;
@@ -137,10 +137,10 @@ public class Peta{
                 i++;
             }
             inFile.close();
-            
+
         } catch (FileNotFoundException e) {
             System.out.println("File not Found");
-        } 
+        }
         return true;
     }
 
@@ -154,7 +154,7 @@ public class Peta{
             this.PetaTetap.add(i, isi2);
         }
     }
-    
+
     // print element atribut isi peta
     public void PrintPeta(){
         try{
@@ -164,7 +164,7 @@ public class Peta{
                 }
                 System.out.println("");
             }
-    
+
             System.out.println("Keterangan Simbol Pada Peta : ");
             System.out.println("- : GrassLand");
             System.out.println("o : Sea");
@@ -175,7 +175,7 @@ public class Peta{
         } catch(Exception exc){
             //
         }
-        
+
     }
 
     //ini untuk print peta yang polosan
@@ -187,7 +187,7 @@ public class Peta{
                 }
                 System.out.println("");
             }
-    
+
             System.out.println("Keterangan Simbol Pada Peta : ");
             System.out.println("- : GrassLand");
             System.out.println("o : Sea");
@@ -196,12 +196,12 @@ public class Peta{
         } catch(Exception exc){
             //
         }
-        
+
 
     }
 
     //menambahkan element ada daftar engimon dan ubah element peta
-    public void AddEngimon(PosisiEngimon e, char c){ 
+    public void AddEngimon(PosisiEngimon e, char c){
         try{
             this.DaftarEngimon.add(e);
             SetElementPeta(e.getBarisPosisi(), e.getKolomPosisi(), c);
@@ -219,7 +219,7 @@ public class Peta{
             this.DaftarEngimon.remove(e);
         } catch(Exception exc){
             //
-            System.out.println(exc.getMessage()); 
+            System.out.println(exc.getMessage());
         }
     }
 
@@ -229,7 +229,7 @@ public class Peta{
             SetElementPeta(e.getBarisPosisi(), e.getKolomPosisi(), GetElementPetaTetap(e.getBarisPosisi(), e.getKolomPosisi()));
             this.DaftarEngimon.remove(e);
         } catch(Exception exc){
-            // System.out.println(exc.getMessage()); 
+            // System.out.println(exc.getMessage());
         }
     }
 
@@ -293,8 +293,8 @@ public class Peta{
         Engimon engimon = new Engimon(spesies, level, 0, 0);
         return engimon;
     }
-    
-    
+
+
     //0 : untuk yg  Grassland; 1 : untuk yg sea; 2 : untuk yg mountains, 3 : untuk tundra, 4 : untuk yg dual element
     public int CekElementEngimonRandom(char engimonTerpilih){
         if( engimonTerpilih == 'g' || engimonTerpilih == 'e'){
@@ -309,7 +309,7 @@ public class Peta{
         //untuk yg double element
         return 4;
     }
-    
+
     // merandom posisi engimon liar akan muncul
     public int RandomPosisi(char engimonTerpilih, int cek){
         int posisi;
@@ -360,8 +360,8 @@ public class Peta{
             level = activeLevel + rand.nextInt(5);
             //create obj engimon
             Engimon e = CreateEngimon(engimonTerpilih, level);
-            PosisiEngimon engimon = new PosisiEngimon(GetBarisObjek(posisi), GetKolomObjek(posisi), e); 
-    
+            PosisiEngimon engimon = new PosisiEngimon(GetBarisObjek(posisi), GetKolomObjek(posisi), e);
+
             //masukin ke daftar engimon dan set element di peta
             AddEngimon(engimon, engimonTerpilih);
             // cout << engimonTerpilih << endl;
@@ -387,25 +387,33 @@ public class Peta{
                 int newb = barisE - 1;
                 SetElementPeta(newb, kolomE, simbol);
                 this.DaftarEngimon.get(index).setBarisPosisi(newb); //ubah nilai baris
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             } else if(pilih == 1){//gerak ke bawah
                 int newb2 = barisE + 1;
                 SetElementPeta(newb2, kolomE, simbol);
                 this.DaftarEngimon.get(index).setBarisPosisi(newb2); //ubah nilai baris
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             } else if(pilih == 2){//gerak ke kiri
                 int newk = kolomE - 1;
                 SetElementPeta(barisE, newk, simbol);
                 this.DaftarEngimon.get(index).setKolomPosisi(newk); //ubah nilai kolom
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             } else { //pilih == 3 //gerak ke kanan
                 int newk2 = kolomE + 1;
                 SetElementPeta(barisE, newk2, simbol);
                 this.DaftarEngimon.get(index).setKolomPosisi(newk2); //ubah nilai kolom
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             }
-            //ubah posisi engimon yg lama jadi element petanya
-            SetElementPeta(barisE, kolomE, simbolPeta);
+//            //ubah posisi engimon yg lama jadi element petanya
+//            SetElementPeta(barisE, kolomE, simbolPeta);
         }  catch(Exception exc){
-            // System.out.println(exc.getMessage());
+            System.out.println(exc.getMessage());
         }
-        
+
     }
 
     // mengecek apakah tempat berpindah engimon sudah sesuai dengan jenis nya
@@ -429,7 +437,7 @@ public class Peta{
                 }
             }
         } catch(Exception exc){
-            // System.out.println(exc.getMessage());
+            System.out.println(exc.getMessage());
         }
         return 0;
     }
@@ -441,39 +449,44 @@ public class Peta{
             char simbol = GetElementPeta(barisE, kolomE);
             if(pilih == 0){ //gerak ke atas
                 int newb = barisE - 1;
-                if(GetElementPeta(newb, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newb, kolomE, simbol);
+                if(newb >= 0 && newb < this.baris){
+                    if(GetElementPeta(newb, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newb, kolomE, simbol);
+                    }
                 }
-                
             } else if(pilih == 1){//gerak ke bawah
                 int newb2 = barisE + 1;
-                if(GetElementPeta(newb2, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newb2, kolomE, simbol);
+                if(newb2 >= 0 && newb2 < this.baris){
+                    if(GetElementPeta(newb2, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newb2, kolomE, simbol);
+                    }
                 }
-               
             } else if(pilih == 2){//gerak ke kiri
                 int newk = kolomE - 1;
-                if(GetElementPeta(newk, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newk, kolomE, simbol);
+                if(newk >= 0 && newk < this.kolom){
+                    if(GetElementPeta(newk, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newk, kolomE, simbol);
+                    }
                 }
-                
             } else { //pilih == 3 //gerak ke kanan
                 int newk2 = kolomE + 1;
-                if(GetElementPeta(newk2, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newk2, kolomE, simbol);
+                if(newk2 >= 0 && newk2 < this.kolom){
+                    if(GetElementPeta(newk2, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newk2, kolomE, simbol);
+                    }
                 }
             }
-           
+
         }  catch(Exception exc){
-            // System.out.println(exc.getMessage());
+            System.out.println(exc.getMessage());
         }
         return valid;
     }
@@ -482,11 +495,12 @@ public class Peta{
     // engimon liar hanya mungkin bergerak dalam 4 arah : atas, bawah, kiri, dan kanan
     public void PilihGerak(int barisE, int kolomE, int index){
         Random rand = new Random();
-        int coba = 0; 
+        int coba = 0;
         //random pilih gerakan antara atas(0), bawah(1), kiri(2), kanan(3)
         int pilih = rand.nextInt(4);
+        int cek = 0;
         try{
-            int cek = CekValidGerak(barisE, kolomE, pilih); //untuk ngecek apakah dipetak yg akan dituju kosong atau tidak
+            cek = CekValidGerak(barisE, kolomE, pilih); //untuk ngecek apakah dipetak yg akan dituju kosong atau tidak
             coba++;
             while(cek != 1 && coba < 4){ //coba dibatasi menjadi 4 kali, kalo coba sudah 4 artinya engimon liar tidak dapat bergerak
                 pilih = (pilih + 1) % 4; //ditambahin
@@ -500,7 +514,7 @@ public class Peta{
         } catch(Exception exc){
             System.out.println(exc.getMessage());
         }
-        
+
     }
 
     // prosedur untuk menggerakkan semua engimon liar yang terdapat pada peta dan daftar engimon liar
@@ -521,13 +535,13 @@ public class Peta{
             if(this.DaftarEngimon.get(i).getEngimon().getStatus() == false){
                 dead.add(this.DaftarEngimon.get(i));
             }
-            
+
         }
         // hapus engimon yang udah mati dari peta dan daftar engimon
         for(PosisiEngimon e : dead){
             DeleteEngimon(e);
         }
- 
+
     }
 
     // prosedur untuk menambahankan Exp dari engimon liar
@@ -539,7 +553,7 @@ public class Peta{
         deleteDeadEngimon();
     }
 
-    
+
 
 //    public static void main(String[] args) {
 //        Peta p = new Peta(16,16);

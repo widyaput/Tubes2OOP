@@ -22,10 +22,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+//import java.awt.*;
+import java.util.*;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -77,7 +76,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import javafx.scene.control.*;
 
 public class Main extends Application {
 
@@ -126,6 +128,9 @@ public class Main extends Application {
     private static final int TURN_MOVE = 3;
     private static final int TURN_EXP = 8;
 
+    private static final KatalogSkill SKILLS = new KatalogSkill();
+    private static final KatalogSpecies ENGIMONS = new KatalogSpecies();
+
     private GraphicsContext gc;
     private List<Point> snakeBody = new ArrayList();
     private Point snakeHead;
@@ -137,8 +142,13 @@ public class Main extends Application {
     private Text ta;
     private HBox hb;
     private VBox icon;
+    private VBox Vboxbreeding;
+    private VBox invenSkillIcon;
+    private ArrayList<VBox> inventory;
     private int arah;
     private Text invenInfo;
+//    private javafx/
+
 
     private boolean player1right = false;
     private boolean player1left = false;
@@ -151,6 +161,10 @@ public class Main extends Application {
     private PosisiEngimon enemy;
     private  int turn = 0;
     private Engimon activeEngimon;
+    private Group root;
+    private Scene scene;
+    private HBox hbox;
+    private VBox chooseAct;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -177,15 +191,16 @@ public class Main extends Application {
         ta = new Text();
         invenInfo = new Text();
 
-        Image pic1 = new Image("/img/sedlyf.jpg");
+        Image pic1 = new Image("/img/profile.png");
         ImageView gambar1 = new ImageView(pic1);
         gambar1.setFitHeight(100);
         gambar1.setFitWidth(100);
         gambar1.setPreserveRatio(true);
         gambar1.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
-                ta.setText("Profile");
 
+                chooseAct.getChildren().clear();
+                fillActivateVbox();
             }
         });
 
@@ -205,12 +220,60 @@ public class Main extends Application {
         gambar3.setFitHeight(100);
         gambar3.setFitWidth(100);
         gambar3.setPreserveRatio(true);
-        gambar3.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-                ta.setText("Breeding");
-            }
-        });
-
+//        ///
+//        gambar3.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            public void handle(MouseEvent mouseEvent) {
+//                Vboxbreeding.getChildren().clear();
+//                KatalogSpecies katalogSpecies = new KatalogSpecies();
+//                KatalogSkill katalogSkill = new KatalogSkill();
+//                Peta map1 = new Peta();
+//                map1.BacaFile("C:\\Users\\M. Fahmi Alamsyah\\Documents\\GitHub\\Tubes2OOP\\Java\\Snake-main\\Snake\\src\\sample\\map.txt");
+//                Player p2 = new Player(map1);
+//
+//                Engimon E1 = new Engimon(katalogSpecies.getSpeciesFromIndex(8), "Alam", "", "", "", "", 13, 0, 0);
+//                Engimon E2 = new Engimon(katalogSpecies.getSpeciesFromIndex(9), "Chelsie", "", "", "", "", 14, 0, 0);
+//
+//                E1.addSkill(katalogSkill.getSkillFromIndex(3));
+//                E2.addSkill(katalogSkill.getSkillFromIndex(4));
+////
+//////
+//                javafx.scene.control.TextField textField = new javafx.scene.control.TextField();
+//
+//                Button button = new Button("Click to get text");
+//
+//                button.setOnAction(action -> {
+//                    System.out.println(textField.getText());
+//                    clearVbox();
+//                    fillVboxInven();
+//                });
+////
+////                HBox hbox = new HBox(textField, button);
+////
+////                Scene scene = new Scene(hbox, 200, 100);
+////                primaryStage.setScene(scene);
+////                primaryStage.show();
+//
+//                Vboxbreeding.getChildren().addAll(textField, button);
+//                Engimon E3 = null;
+//                try {
+//                    E3 = p1.breeding(E1,E2, "thomas");
+//                }
+//                catch (CustomException e) {
+////                    e.printStackTrace();
+//                }
+//                if (E3.getSpeciesName() == "Jynx") {
+//
+//
+//                    Image pic44 = new Image("img/electric_down.png");
+//                    ImageView gambar44 = new ImageView(pic44);
+//                    gambar44.setFitHeight(100);
+//                    gambar44.setFitWidth(100);
+//                    gambar44.setPreserveRatio(true);
+//
+//                    Vboxbreeding.getChildren().add(gambar44);
+//                }
+//            }});
+                ////
         Image pic4 = new Image("img/sword-removebg-preview.png");
         ImageView gambar4 = new ImageView(pic4);
         gambar4.setFitHeight(100);
@@ -224,37 +287,76 @@ public class Main extends Application {
             }
         });
 
-        icon = new VBox();
-        icon.getChildren().addAll(gambar1,gambar2,gambar3,gambar4);
+        Image save = new Image("img/save.png");
+        ImageView saveView = new ImageView(save);
+        saveView.setFitHeight(100);
+        saveView.setFitWidth(100);
+        saveView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent mouseEvent) {
+                try{
+                    p1.save();
+                    ta.setText("Berhasil save");
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
-        HBox hbox = new HBox();
-        hbox.setSpacing(20);
+
+        chooseAct = new VBox();
+
+        icon = new VBox();
+        icon.getChildren().addAll(gambar1,gambar2,gambar3,gambar4, saveView);
+//        invenEngimonIcon = new VBox();
+        invenSkillIcon = new VBox();
+        initInventory();
+        // Harus buat imageView untuk load Skill based on inventory player
+
+//        fillVboxInven();
+        hbox = new HBox();
+        hbox.setSpacing(10);
         hbox.setPadding(new Insets(20, 50, 50, 60));
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        hbox.getChildren().addAll(icon,canvas,ta, invenInfo);
-        Group root = new Group(hbox);
-        Scene scene = new Scene(root,880,550);
+        hbox.getChildren().addAll(icon,canvas,ta, chooseAct, inventory.get(0), inventory.get(1), inventory.get(2), inventory.get(3),inventory.get(4),invenInfo);
+        root = new Group(hbox);
+        scene = new Scene(root,880,550);
 
         switchToMain.setOnAction(e -> {
             // String command = "new";
             Peta map = new Peta();
             map.BacaFile("C:\\Users\\ACER\\Downloads\\Snake\\Snake-main\\Snake\\src\\sample\\map.txt");
             p1 = new Player(map);
-
+            p1.starterPack();
+            try {
+                p1.activateEngimon(0);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
             snakeBody.add(new Point(p1.getXCoor(), p1.getYCoor()));
             snakeHead = snakeBody.get(0);
 
             generateEngimon();
             p1.getMap().PrintDaftarEngimon();
             p1.showMap();
+            invenSkillIcon = new VBox();
+            invenInfo = new Text();
+//            invenInfo.setText("Test");
+            hbox.getChildren().addAll(invenSkillIcon, invenInfo);
+            fillVboxInven();
 //
             primaryStage.setScene(scene);
             runTimeLine();
         });
 
         switchToLoad.setOnAction(e -> {
+            Scanner scanner = new Scanner(System.in);
             p1 = Player.load();
-
+            if (p1 == null){
+                System.out.println("Couldnt load game");
+                scanner.close();
+                System.exit(1);
+            }
             snakeBody.add(new Point(p1.getXCoor(), p1.getYCoor()));
             snakeHead = snakeBody.get(0);
 
@@ -268,12 +370,15 @@ public class Main extends Application {
 
         primaryStage.show();
         gc = canvas.getGraphicsContext2D();
+
         arah = 1;
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 KeyCode code = event.getCode();
+                clearVbox();
+                fillVboxInven();
                 if (code == KeyCode.RIGHT || code == KeyCode.D) {
                     moveRight();
                     ta.setText("right");
@@ -281,14 +386,17 @@ public class Main extends Application {
                 } else if (code == KeyCode.LEFT || code == KeyCode.A) {
                     moveLeft();
                     ta.setText("left");
+//                    fillVboxInven();
                     arah = 3;
                 } else if (code == KeyCode.UP || code == KeyCode.W) {
                     moveUp();
                     ta.setText("up");
+//                    fillVboxInven();
                     arah = 4;
                 } else if (code == KeyCode.DOWN || code == KeyCode.S) {
                     moveDown();
                     ta.setText("down");
+//                    fillVboxInven();
                     arah = 2;
                 }
             }
@@ -301,6 +409,14 @@ public class Main extends Application {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
+
+    public void initInventory(){
+        inventory = new ArrayList<VBox>();
+        for (int i = 0; i < 5; i++){
+            VBox v = new VBox();
+            inventory.add(v);
+        }
+    }
     private void run(GraphicsContext gc)  {
         if (gameOver) {
             gc.setFill(Color.RED);
@@ -312,20 +428,161 @@ public class Main extends Application {
         drawBackground(gc, p1.getMap());
         drawEngimonLiar(p1.getMap());
         drawSnake(gc,arah);
+//        fillVboxInven();
     }
 
-    private void loadSkillImage(int idx){
-        String path = "img/";
+//    private void loadSkillImage(int idx){
+//        String path = "img/";
+//    }
+
+   // Ngebuat list gambar skill dari inventory player
+    private void clearVbox(){
+        for (VBox v: inventory){
+            v.getChildren().clear();
+        }
+    }
+    public void fillVboxInven(){
+        boolean found = false;
+
+        Vector<Skill> skills = p1.getListSkill().getStorage();
+        int count = 0;
+        int idxV = 0;
+        for (Skill s:skills){
+            int idx = SKILLS.getIndex(s.getName());
+            int ml = s.getMasteryLevel();
+
+            ImageView imgView = loadSkillImage(idx, ml);
+//            invenSkillIcon.getChildren().add(imgView);
+
+            inventory.get(idxV).getChildren().add(imgView);
+            count++;
+            if (count == 10){
+                idxV++;
+                count = 0;
+            }
+        }
+
+        Vector<Engimon> engimonn = p1.getListEng().getStorage();
+
+        for (Engimon en: engimonn){
+            int idx = ENGIMONS.getIndex(en.getName());
+//            int ml = s.getMasteryLevel();
+
+//            ImageView imgView = loadSkillImage(id);
+//            invenSkillIcon.getChildren().add(imgView);
+            ImageView imgView = loadSpeciesImage(en);
+            inventory.get(idxV).getChildren().add(imgView);
+
+            count++;
+            if (count == 10){
+                idxV++;
+                count = 0;
+            }
+        }
+
+    }
+
+    public void fillActivateVbox(){
+        Vector<Engimon> engimonn = p1.getListEng().getStorage();
+        int i = 0;
+        for (Engimon en: engimonn){
+            int idx = ENGIMONS.getIndex(en.getName());
+//            int ml = s.getMasteryLevel();
+
+//            ImageView imgView = loadSkillImage(id);
+//            invenSkillIcon.getChildren().add(imgView);
+            ImageView imgView = loadSpeciesImage(en);
+            imgView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent mouseEvent) {
+                    try {
+                        p1.activateEngimon(engimonn.indexOf(en));
+                        chooseAct.getChildren().clear();
+                        clearVbox();
+                        fillVboxInven();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            chooseAct.getChildren().add(imgView);
+            i++;
+        }
+    }
+
+    public ImageView loadSpeciesImage(Engimon e){
+        if(e.getElement().size() == 2){
+            if(e.getElement().get(0).equals(Element.FIRE) &&
+                    e.getElement().get(1).equals(Element.ELECTRIC)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[15]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[14]);
+                }
+            } else if(e.getElement().get(0).equals(Element.WATER) &&
+                    e.getElement().get(1).equals(Element.ICE)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[13]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[12]);
+                }
+            } else if(e.getElement().get(0).equals(Element.WATER) &&
+                    e.getElement().get(1).equals(Element.GROUND)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[1]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[0]);
+                }
+            }
+        } else {
+            if(e.getElement().get(0).equals(Element.FIRE)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[5]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[4]);
+                }
+            } else if(e.getElement().get(0).equals(Element.WATER)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[11]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[10]);
+                }
+            } else if(e.getElement().get(0).equals(Element.ICE)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[9]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[8]);
+                }
+            } else if(e.getElement().get(0).equals(Element.GROUND)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[7]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[6]);
+                }
+            } else if(e.getElement().get(0).equals(Element.ELECTRIC)){
+                if(e.getLevel() < activeLevel){
+                    engimonImage = new Image(ENGIMON_IMAGE[3]);
+                } else {
+                    engimonImage = new Image(ENGIMON_IMAGE[2]);
+                }
+            }
+        }
+        ImageView viewee = new ImageView(engimonImage);
+        String info = e.toString();
+        viewee.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent mouseEvent) {
+                invenInfo.setText(info);
+            }
+        });
+        return viewee;
     }
 
     public ImageView loadSkillImage(int idx, int mL){
         Image img = new Image(SKILL_IMAGE[idx + mL - 1]);
         ImageView imgView = new ImageView(img);
+        String info = SKILLS.getSkillFromIndex(idx).toString();
         imgView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent mouseEvent) {
-                if(isThereEngimon(p1.getMap())) {
-                    ta.setText("Battle");
-                }
+                invenInfo.setText(info);
             }
         });
 
@@ -374,7 +631,7 @@ public class Main extends Application {
                         mapImage = new Image(MAP_IMAGE[3]);
                         // gc.fillRect(i * SQUARE_SIZE, j * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
                         gc.drawImage(mapImage, i * SQUARE_SIZE, j * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-                    } else if(map.GetElementPeta(j, i) == 'P'){
+                    } else if(map.GetElementPeta(j, i) == 'P' || map.GetElementPeta(j, i) == 'X'){
                         // untuk player
                     } else {
                         gc.setFill(Color.web(getColorElement(map.GetElementPeta(j, i))));
@@ -391,6 +648,8 @@ public class Main extends Application {
     private void drawSnake(GraphicsContext gc,int arah) {
 //        gc.setFill(Color.web("4674E9"));
 //        gc.fillRoundRect(snakeHead.getX() * SQUARE_SIZE, snakeHead.getY() * SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1, 35, 35);
+//        gc.setFill(Color.web("117A65"));
+        gc.fillRoundRect(p1.getXEA() * SQUARE_SIZE, p1.getYEA() * SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1, 35, 35);
         if(arah == 1) {
             Image hero = new Image("img/right.jpg");
             gc.drawImage(hero,snakeHead.getX() * SQUARE_SIZE, snakeHead.getY() * SQUARE_SIZE, SQUARE_SIZE - 1, SQUARE_SIZE - 1);
@@ -501,10 +760,23 @@ public class Main extends Application {
         }
     }
 
+    private void moveAE(String command){
+        if(p1.getStatusEA()){
+            try {
+                p1.moveAE(command);
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+                p1.relocateAE();
+            }
+        }
+    }
+
     private void moveRight() {
         try{
             p1.moveD();
             snakeHead.x++;
+            moveAE("d");
             turn++;
             if(turn % TURN_MOVE == 0){
                 p1.getMap().GerakinEngimonLiar();
@@ -517,13 +789,14 @@ public class Main extends Application {
             System.out.println(e.getMessage());
         }
 //        p1.getMap().PrintDaftarEngimon();
-//        p1.showMap();
+        p1.showMap();
     }
 
     private void moveLeft() {
         try{
             p1.moveA();
             snakeHead.x--;
+            moveAE("a");
             turn++;
             if(turn % TURN_MOVE == 0){
                 p1.getMap().GerakinEngimonLiar();
@@ -536,13 +809,14 @@ public class Main extends Application {
             System.out.println(e.getMessage());
         }
 //        p1.getMap().PrintDaftarEngimon();
-//        p1.showMap();
+        p1.showMap();
     }
 
     private void moveUp() {
         try{
             p1.moveW();
             snakeHead.y--;
+            moveAE("w");
             turn++;
             if(turn % TURN_MOVE == 0){
                 p1.getMap().GerakinEngimonLiar();
@@ -555,13 +829,14 @@ public class Main extends Application {
             System.out.println(e.getMessage());
         }
 //        p1.getMap().PrintDaftarEngimon();
-//        p1.showMap();
+        p1.showMap();
     }
 
     private void moveDown() {
         try{
             p1.moveS();
             snakeHead.y++;
+            moveAE("s");
             turn++;
             if(turn % TURN_MOVE == 0){
                 p1.getMap().GerakinEngimonLiar();
@@ -576,7 +851,7 @@ public class Main extends Application {
             System.out.println(e.getMessage());
         }
 //        p1.getMap().PrintDaftarEngimon();
-//        p1.showMap();
+        p1.showMap();
     }
 
 
