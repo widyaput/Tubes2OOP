@@ -905,7 +905,7 @@ public class Player {
                 Matcher n = str.matcher(dummy);
                 n.find();
                 String spcname = dummy.substring(n.start(), n.end());
-                Species spcdum = specfac.getSpeciesFromIndex(specfac.getIndexOfSpecies(spcname));
+                Species spcdum = specfac.getSpeciesFromIndex(specfac.getIndex(spcname));
                 int posisi1, posisi2,level, exp, cexp;
                 m.find();
                 posisi1 =Integer.parseInt(dummy.substring(m.start(), m.end()));
@@ -967,11 +967,11 @@ public class Player {
                     m.find();
                     int idx = m.start();
                     int mlvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
-                    Skill s = skillfac.getSkillFromIndex(skillfac.getIndexOfSkill(dummy.substring(0, idx-1)));
+                    Skill s = skillfac.getSkillFromIndex(skillfac.getIndex(dummy.substring(0, idx-1)));
                     s.setMasteryLevel(mlvl);
                     dumSkills.add(s);
                 }
-                Engimon ea = new Engimon(specfac.getSpeciesFromIndex(specfac.getIndexOfSpecies(spcname)), name.equals("null") ? "" : name, namaortu1.equals("null") ? "" : namaortu1, namaspecies1.equals("null") ? "" : namaspecies1, namaortu2.equals("null") ? "" : namaortu2, namaspecies2.equals("null") ? "" : namaspecies2, dumSkills, lvl,exp,ce);
+                Engimon ea = new Engimon(specfac.getSpeciesFromIndex(specfac.getIndex(spcname)), name.equals("null") ? "" : name, namaortu1.equals("null") ? "" : namaortu1, namaspecies1.equals("null") ? "" : namaspecies1, namaortu2.equals("null") ? "" : namaortu2, namaspecies2.equals("null") ? "" : namaspecies2, dumSkills, lvl,exp,ce);
                 p1.activeEngimon = ea;
                 p1.isThereActiveEngimon = true;
                 p1.setCoorEA(Pair.makePair(coor1, coor2));
@@ -1008,11 +1008,11 @@ public class Player {
                     m.find();
                     int idx = m.start();
                     int mlvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
-                    Skill s = skillfac.getSkillFromIndex(skillfac.getIndexOfSkill(dummy.substring(0, idx-1)));
+                    Skill s = skillfac.getSkillFromIndex(skillfac.getIndex(dummy.substring(0, idx-1)));
                     s.setMasteryLevel(mlvl);
                     dumSkills.add(s);
                 }
-                Engimon e = new Engimon(specfac.getSpeciesFromIndex(specfac.getIndexOfSpecies(spcname)), name.equals("null") ? "" : name, namaortu1.equals("null") ? "" : namaortu1, namaspecies1.equals("null") ? "" : namaspecies1, namaortu2.equals("null") ? "" : namaortu2, namaspecies2.equals("null") ? "" : namaspecies2, dumSkills, lvl,exp,ce);
+                Engimon e = new Engimon(specfac.getSpeciesFromIndex(specfac.getIndex(spcname)), name.equals("null") ? "" : name, namaortu1.equals("null") ? "" : namaortu1, namaspecies1.equals("null") ? "" : namaspecies1, namaortu2.equals("null") ? "" : namaortu2, namaspecies2.equals("null") ? "" : namaspecies2, dumSkills, lvl,exp,ce);
                 p1.addEngimon(e); 
             }
 
@@ -1023,7 +1023,7 @@ public class Player {
                 m.find();
                 int idx = m.start();
                 int mlvl = Integer.parseInt(dummy.substring(m.start(), m.end()));
-                Skill s = skillfac.getSkillFromIndex(skillfac.getIndexOfSkill(dummy.substring(0, idx-1)));
+                Skill s = skillfac.getSkillFromIndex(skillfac.getIndex(dummy.substring(0, idx-1)));
                 s.setMasteryLevel(mlvl);
                 p1.addSkillItem(s);
             }

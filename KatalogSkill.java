@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class KatalogSkill implements Iterable<Skill>{
+public class KatalogSkill implements Iterable<Skill>, Katalog{
     private ArrayList<Skill> skill_collection;
 
     /**
@@ -85,7 +85,7 @@ public class KatalogSkill implements Iterable<Skill>{
      * @param namaSkill nama skill yang ingin dicari indeksnya
      * @return indeks suatu skill pada KatalogSkill
      */
-    public int getIndexOfSkill(String namaSkill){
+    public int getIndex(String namaSkill){
         int i = 0;
         for (Skill skill : skill_collection) {
             if (skill.getName().equals(namaSkill)){

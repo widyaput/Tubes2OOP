@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class KatalogSpecies implements Iterable<Species>{
+public class KatalogSpecies implements Iterable<Species>, Katalog{
     private ArrayList<Species> species;
 
     /**
@@ -66,7 +66,7 @@ public class KatalogSpecies implements Iterable<Species>{
      * @param namaSpecies nama species yang ingin dicari indeksnya
      * @return indeks suatu species pada KatalogSpecies
      */
-    public int getIndexOfSpecies(String namaSpecies){
+    public int getIndex(String namaSpecies){
         int i = 0;
         for (Species species2 : species) {
             if (species2.getName().equals(namaSpecies)){
