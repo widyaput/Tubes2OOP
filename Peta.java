@@ -1,5 +1,3 @@
-package sample;
-
 import java.util.*;
 import java.io.*;
 
@@ -387,23 +385,31 @@ public class Peta{
                 int newb = barisE - 1;
                 SetElementPeta(newb, kolomE, simbol);
                 this.DaftarEngimon.get(index).setBarisPosisi(newb); //ubah nilai baris
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             } else if(pilih == 1){//gerak ke bawah
                 int newb2 = barisE + 1;
                 SetElementPeta(newb2, kolomE, simbol);
                 this.DaftarEngimon.get(index).setBarisPosisi(newb2); //ubah nilai baris
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             } else if(pilih == 2){//gerak ke kiri
                 int newk = kolomE - 1;
                 SetElementPeta(barisE, newk, simbol);
                 this.DaftarEngimon.get(index).setKolomPosisi(newk); //ubah nilai kolom
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             } else { //pilih == 3 //gerak ke kanan
                 int newk2 = kolomE + 1;
                 SetElementPeta(barisE, newk2, simbol);
                 this.DaftarEngimon.get(index).setKolomPosisi(newk2); //ubah nilai kolom
+                //ubah posisi engimon yg lama jadi element petanya
+                SetElementPeta(barisE, kolomE, simbolPeta);
             }
-            //ubah posisi engimon yg lama jadi element petanya
-            SetElementPeta(barisE, kolomE, simbolPeta);
+//            //ubah posisi engimon yg lama jadi element petanya
+//            SetElementPeta(barisE, kolomE, simbolPeta);
         }  catch(Exception exc){
-            // System.out.println(exc.getMessage());
+             System.out.println(exc.getMessage());
         }
         
     }
@@ -429,7 +435,7 @@ public class Peta{
                 }
             }
         } catch(Exception exc){
-            // System.out.println(exc.getMessage());
+             System.out.println(exc.getMessage());
         }
         return 0;
     }
@@ -441,39 +447,44 @@ public class Peta{
             char simbol = GetElementPeta(barisE, kolomE);
             if(pilih == 0){ //gerak ke atas
                 int newb = barisE - 1;
-                if(GetElementPeta(newb, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newb, kolomE, simbol);
+                if(newb >= 0 && newb < this.baris){
+                    if(GetElementPeta(newb, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newb, kolomE, simbol);
+                    }
                 }
-                
             } else if(pilih == 1){//gerak ke bawah
                 int newb2 = barisE + 1;
-                if(GetElementPeta(newb2, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newb2, kolomE, simbol);
+                if(newb2 >= 0 && newb2 < this.baris){
+                    if(GetElementPeta(newb2, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newb2, kolomE, simbol);
+                    }
                 }
-               
             } else if(pilih == 2){//gerak ke kiri
                 int newk = kolomE - 1;
-                if(GetElementPeta(newk, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newk, kolomE, simbol);
+                if(newk >= 0 && newk < this.kolom){
+                    if(GetElementPeta(newk, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newk, kolomE, simbol);
+                    }
                 }
-                
             } else { //pilih == 3 //gerak ke kanan
                 int newk2 = kolomE + 1;
-                if(GetElementPeta(newk2, kolomE) == 'P'){
-                    throw (new CustomException("Ada Player"));
-                } else {
-                    valid = CekValid(newk2, kolomE, simbol);
+                if(newk2 >= 0 && newk2 < this.kolom){
+                    if(GetElementPeta(newk2, kolomE) == 'P'){
+                        throw (new CustomException("Ada Player"));
+                    } else {
+                        valid = CekValid(newk2, kolomE, simbol);
+                    }
                 }
             }
            
         }  catch(Exception exc){
-            // System.out.println(exc.getMessage());
+             System.out.println(exc.getMessage());
         }
         return valid;
     }
@@ -485,8 +496,9 @@ public class Peta{
         int coba = 0; 
         //random pilih gerakan antara atas(0), bawah(1), kiri(2), kanan(3)
         int pilih = rand.nextInt(4);
+        int cek = 0;
         try{
-            int cek = CekValidGerak(barisE, kolomE, pilih); //untuk ngecek apakah dipetak yg akan dituju kosong atau tidak
+            cek = CekValidGerak(barisE, kolomE, pilih); //untuk ngecek apakah dipetak yg akan dituju kosong atau tidak
             coba++;
             while(cek != 1 && coba < 4){ //coba dibatasi menjadi 4 kali, kalo coba sudah 4 artinya engimon liar tidak dapat bergerak
                 pilih = (pilih + 1) % 4; //ditambahin
